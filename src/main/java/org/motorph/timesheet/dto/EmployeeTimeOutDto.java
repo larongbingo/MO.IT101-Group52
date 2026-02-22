@@ -1,4 +1,4 @@
-﻿package org.motorph.timesheet.dto;
+package org.motorph.timesheet.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

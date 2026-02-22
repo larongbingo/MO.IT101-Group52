@@ -1,4 +1,4 @@
-﻿package org.motorph.timesheet.dto;
+package org.motorph.timesheet.dto;
 
 import org.motorph.timesheet.AttendanceType;
 

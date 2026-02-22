@@ -1,4 +1,4 @@
-﻿package org.motorph.employees;
+package org.motorph.employees;
 
 public enum EmploymentStatus
 {

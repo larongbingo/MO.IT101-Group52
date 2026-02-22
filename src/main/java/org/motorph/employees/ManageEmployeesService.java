@@ -1,4 +1,4 @@
-﻿package org.motorph.employees;
+package org.motorph.employees;
 
 import org.jetbrains.annotations.NotNull;
 import org.motorph.employees.dto.NewEmployeeDto;

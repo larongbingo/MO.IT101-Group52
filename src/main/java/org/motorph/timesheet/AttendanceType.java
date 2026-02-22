@@ -1,4 +1,4 @@
-﻿package org.motorph.timesheet;
+package org.motorph.timesheet;
 
 public enum AttendanceType {
     AtWork,

@@ -1,4 +1,4 @@
-﻿package org.motorph.timesheet;
+package org.motorph.timesheet;
 
 import org.jetbrains.annotations.NotNull;
 
