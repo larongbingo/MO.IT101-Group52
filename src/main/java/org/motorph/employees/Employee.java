@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Employee {
-    public Employee(@NotNull String employeeId, String lastName, String firstName, LocalDateTime birthday, String address,
+    public Employee(@NotNull String employeeId, String lastName, String firstName, LocalDate birthday, String address,
                     String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
                     String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
                     BigDecimal basicSalary) {
@@ -48,7 +48,7 @@ public class Employee {
     public final String EmployeeId;
     public String LastName;
     public String FirstName;
-    public LocalDateTime Birthday;
+    public LocalDate Birthday;
     public String Address;
     public String PhoneNumber;
 
