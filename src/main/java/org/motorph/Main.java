@@ -3,6 +3,7 @@ package org.motorph;
 import de.siegmar.fastcsv.reader.CsvReader;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmploymentStatus;
+import org.motorph.employees.Login;
 import org.motorph.timesheet.Timesheet;
 
 import java.io.BufferedReader;
@@ -19,16 +20,17 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Main {
-    private List<Employee> employees = new ArrayList<>();
-    private List<Timesheet> timesheets = new ArrayList<>();
     private static List<Employee> employees = new ArrayList<>();
+    private static List<Login> logins = new ArrayList<>();
     private static List<Timesheet> timesheets = new ArrayList<>();
+    private static Employee currentEmployee;
 
     public static void main(String[] args) {
         LoadEmployees();
 
+        Authenticate();
 
-
+        System.out.println("[MotorPH] Welcome " + currentEmployee.FirstName + " " + currentEmployee.LastName);
         // Needed Presentations
         // 1. Login
         // 2. Current Employee Display
@@ -82,6 +84,13 @@ public class Main {
                     throw new RuntimeException(e);
                 }
                 employees.add(employee);
+
+                var login = new Login(
+                        x.getField("Employee #"),
+                        x.getField("Username"),
+                        x.getField("Password")
+                );
+                logins.add(login);
             });
 
             // TODO: rebuild heirarchy from Immediate Supervisor column (not needed for now)
@@ -101,5 +110,32 @@ public class Main {
             System.out.println("[MotorPH] Error loading employees: " + e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    private static void Authenticate() {
+        System.out.println("[MotorPH] Username: ");
+        var username = System.console().readLine();
+        System.out.println("[MotorPH] Password: ");
+        var password = System.console().readPassword();
+
+        if (username == null || password == null) {
+            System.out.println("[MotorPH] Authentication failed: username or password cannot be null");
+            throw new RuntimeException("Authentication failed: username or password cannot be null");
+        }
+
+        var login = logins.stream().filter(x -> x.Username.equals(username) && x.Password.equals(new String(password))).findFirst();
+        if (login.isEmpty()) {
+            System.out.println("[MotorPH] Authentication failed: invalid username or password");
+            throw new RuntimeException("Authentication failed: invalid username or password");
+        }
+
+        var employee = employees.stream().filter(x -> x.EmployeeId.equals(login.get().EmployeeId)).findFirst();
+        if (employee.isEmpty()) {
+            System.out.println("[MotorPH] Authentication failed: invalid employee");
+            throw new RuntimeException("Authentication failed: invalid employee");
+        }
+
+        System.out.println("[MotorPH] Authentication successful");
+        currentEmployee = employee.get();
     }
 }
