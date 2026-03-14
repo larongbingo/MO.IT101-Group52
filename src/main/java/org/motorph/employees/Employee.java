@@ -12,7 +12,7 @@ public class Employee {
     public Employee(@NotNull String employeeId, String lastName, String firstName, LocalDate birthday, String address,
                     String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
                     String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
-                    BigDecimal basicSalary) {
+                    double basicSalary) {
         Objects.requireNonNull(employeeId);
         Objects.requireNonNull(lastName);
         Objects.requireNonNull(firstName);
@@ -58,17 +58,20 @@ public class Employee {
     public String Position;
     public UUID SupervisorId;
 
-    public BigDecimal BasicSalary;
+    public double BasicSalary;
 
     @NotNull
-    public BigDecimal GetGrossSemiMonthlySalaryRate() {
-        return BasicSalary.divide(BigDecimal.TWO, 2, RoundingMode.DOWN);
+    public double getGrossSemiMonthlySalaryRate() {
+        return BasicSalary / 2;
     }
 
     @NotNull
-    public BigDecimal GetGrossHourlySalaryRate() {
+    public double getGrossHourlySalaryRate() {
         // (BasicSalary / 21) / 8
-        return BasicSalary.divide(BigDecimal.valueOf(21), 2, RoundingMode.DOWN)
-                .divide(BigDecimal.valueOf(8), 2, RoundingMode.DOWN);
+        return (BasicSalary / 21) / 8;
+    }
+
+    public boolean IsPayrollStaff() {
+        return Position.toLowerCase().contains("payroll");
     }
 }

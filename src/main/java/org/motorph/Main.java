@@ -4,11 +4,11 @@ import de.siegmar.fastcsv.reader.CsvReader;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmploymentStatus;
 import org.motorph.employees.Login;
+import org.motorph.payroll.PayrollService;
 import org.motorph.timesheet.Timesheet;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -31,10 +31,18 @@ public class Main {
         Authenticate();
 
         System.out.println("[MotorPH] Welcome " + currentEmployee.FirstName + " " + currentEmployee.LastName);
+
+        if (currentEmployee.IsPayrollStaff()) {
+
+        } else {
+            ProcessEmployeePayroll(currentEmployee);
+        }
+
         // Needed Presentations
         // 1. Login
         // 2. Current Employee Display
-        // 3. Process Payroll Selection (elevated access/staff)
+        // 3.1. Current Employee only (default access)
+        // 3.2. Process Payroll Selection (elevated access/staff)
             // 1. One Employee
             // 2. All Employees
     }
@@ -78,7 +86,7 @@ public class Main {
                             x.getField("Pag-ibig #"),
                             x.getField("Status").equalsIgnoreCase("regular") ? EmploymentStatus.Regular : EmploymentStatus.Probationary,
                             x.getField("Position"),
-                            new BigDecimal(usNumberFormat.parse(x.getField("Basic Salary")).doubleValue())
+                            usNumberFormat.parse(x.getField("Basic Salary")).doubleValue()
                     );
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
@@ -137,5 +145,47 @@ public class Main {
 
         System.out.println("[MotorPH] Authentication successful");
         currentEmployee = employee.get();
+    }
+
+    private static void ProcessEmployeePayroll(Employee employee) {
+        var groupedTimesheet = timesheets.stream()
+                .filter(x -> x.EmployeeId.equals(employee.EmployeeId))
+                .collect(Collectors.groupingBy(x -> x.StartTime.getMonth() + " " + x.StartTime.getYear()));
+        var availableMonths = groupedTimesheet.keySet();
+        System.out.println(availableMonths);
+
+        if (availableMonths.isEmpty()) {
+            System.out.println("[MotorPH] No available months to process payroll");
+            throw new RuntimeException("[MotorPH] No available months to process payroll");
+        }
+
+        // Select a month or process all available data
+        System.out.println("[MotorPH] Available months: all, " + availableMonths);
+        var month = System.console().readLine();
+        if (month == null) {
+            System.out.println("[MotorPH] No month selected");
+            throw new RuntimeException("[MotorPH] No month selected");
+        }
+        if (month.equalsIgnoreCase("all")) {
+            for (var monthTimesheet : groupedTimesheet.values()) {
+                ProcessEmployeePayroll(employee, monthTimesheet);
+            }
+        }
+        else {
+            var monthTimesheet = groupedTimesheet.get(month.toUpperCase());
+            if (monthTimesheet == null) {
+                System.out.println("[MotorPH] No timesheet data for month " + month);
+                throw new RuntimeException("[MotorPH] No timesheet data for month " + month);
+            }
+            ProcessEmployeePayroll(employee, monthTimesheet);
+        }
+
+    }
+
+    private static void ProcessEmployeePayroll(Employee employee, List<Timesheet> timesheets)
+    {
+        var payrollService = new PayrollService();
+        var payroll = payrollService.calculateGrossPay(employee, timesheets);
+        System.out.println("[MotorPH] " + timesheets.getFirst().StartTime.getMonth() + " " + timesheets.getFirst().StartTime.getYear() + " Gross Salary: Php " + payroll);
     }
 }
