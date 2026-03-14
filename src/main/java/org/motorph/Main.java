@@ -35,7 +35,7 @@ public class Main {
         if (currentEmployee.IsPayrollStaff()) {
 
         } else {
-            ProcessEmployeePayroll(currentEmployee);
+            SelectTimesheetForProcessing(currentEmployee);
         }
 
         // Needed Presentations
@@ -44,7 +44,9 @@ public class Main {
         // 3.1. Current Employee only (default access)
         // 3.2. Process Payroll Selection (elevated access/staff)
             // 1. One Employee
-            // 2. All Employees
+                // 1. All Months
+                // 1. One Month
+            // 2. All Employees - One Month
     }
 
     // TODO(ComProg2): refactor to a separate class
@@ -147,7 +149,7 @@ public class Main {
         currentEmployee = employee.get();
     }
 
-    private static void ProcessEmployeePayroll(Employee employee) {
+    private static void SelectTimesheetForProcessing(Employee employee) {
         var groupedTimesheet = timesheets.stream()
                 .filter(x -> x.EmployeeId.equals(employee.EmployeeId))
                 .collect(Collectors.groupingBy(x -> x.StartTime.getMonth() + " " + x.StartTime.getYear()));
