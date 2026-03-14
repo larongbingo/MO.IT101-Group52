@@ -185,7 +185,25 @@ public class Main {
     private static void ProcessEmployeePayroll(Employee employee, List<Timesheet> timesheets)
     {
         var payrollService = new PayrollService();
-        var payroll = payrollService.calculateGrossPay(employee, timesheets);
-        System.out.println("[MotorPH] " + timesheets.getFirst().StartTime.getMonth() + " " + timesheets.getFirst().StartTime.getYear() + " Gross Salary: Php " + payroll);
+        var totalHours = payrollService.countTotalWorkHours(timesheets);
+        var grossPay = payrollService.calculateGrossPay(employee, timesheets);
+        var sss = payrollService.calculateSSSContribution(grossPay);
+        var philHealth = payrollService.calculatePhilHealthContribution(grossPay);
+        var pagIbig = payrollService.calculatePagIbigContribution(grossPay);
+        var totalDeductions = sss + philHealth + pagIbig;
+        var taxableIncome = grossPay - totalDeductions;
+        var tax = payrollService.calculateTax(taxableIncome);
+        var netPay = taxableIncome - tax;
+
+        System.out.println("[MotorPH] === " + timesheets.getFirst().StartTime.getMonth() + " " + timesheets.getFirst().StartTime.getYear());
+        System.out.println("[MotorPH] Total Hours Worked: " + totalHours);
+        System.out.println("[MotorPH] Gross Pay: Php " + grossPay);
+        System.out.println("[MotorPH] SSS Contribution: Php " + sss);
+        System.out.println("[MotorPH] PhilHealth Contribution: Php " + philHealth);
+        System.out.println("[MotorPH] Pag-Ibig Contribution: Php " + pagIbig);
+        System.out.println("[MotorPH] Total Deductions: Php " + totalDeductions);
+        System.out.println("[MotorPH] Taxable Income: Php " + taxableIncome);
+        System.out.println("[MotorPH] Tax: Php " + tax);
+        System.out.println("[MotorPH] Net Pay: Php " + netPay);
     }
 }
