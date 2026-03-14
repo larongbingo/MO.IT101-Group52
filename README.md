@@ -1,4 +1,4 @@
-# MOIT101 - Group 52
+# MOIT101 - Group 55
 
 Member - Solo - Renz Christen Yeomer A. Pagulayan
 
@@ -9,6 +9,8 @@ Program Details
   - Employee or Payroll Staff access is determined on Position column
     - If Position contains the keyword "Payroll", then your access is Payroll Staff
     - Otherwise, your access is Employee. The access is only your employee data.
+- Limitations:
+  - Doesn't take account of any holidays or overtime.
 
 Project Plan Link
 - Requires MMDC Google Account
