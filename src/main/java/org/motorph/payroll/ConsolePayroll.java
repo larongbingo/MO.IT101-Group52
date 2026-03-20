@@ -165,6 +165,7 @@ public class ConsolePayroll {
             for (var employee : employees) {
                 var timesheets = this.timesheetRepository.getAllTimesheetsByEmployeeId(employee.EmployeeId);
                 var payroll = payrollService.generatePaySlip(employee, timesheets);
+                System.out.println("Payroll for " + employee.getBasicDetails());
                 System.out.println(payroll);
             }
         }
