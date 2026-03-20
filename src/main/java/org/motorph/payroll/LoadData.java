@@ -8,6 +8,7 @@ import org.motorph.employees.Login;
 import org.motorph.timesheet.Timesheet;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -20,14 +21,17 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class LoadData {
+    private final InputStream employeeStream;
+    private final InputStream attendanceStream;
+
+    public LoadData(InputStream employeeStream, InputStream attendanceStream) {
+        this.employeeStream = employeeStream;
+        this.attendanceStream = attendanceStream;
+    }
+
     public EmployeeLogin LoadEmployees() throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
         List<Login> logins = new ArrayList<>();
-
-        var employeeStream = Main.class.getClassLoader().getResourceAsStream("employees.csv");
-        if (employeeStream == null) {
-            throw new RuntimeException("[MotorPH] Could not find employees.csv");
-        }
 
         var usNumberFormat = NumberFormat.getInstance(Locale.US);
 
@@ -81,11 +85,6 @@ public class LoadData {
 
     public List<Timesheet> LoadTimesheets() throws RuntimeException {
         List<Timesheet> timesheets = new ArrayList<>();
-
-        var attendanceStream = Main.class.getClassLoader().getResourceAsStream("attendance.csv");
-        if (attendanceStream == null) {
-            throw new RuntimeException("[MotorPH] Could not find attendance.csv");
-        }
 
         var attendanceReader = new BufferedReader(new InputStreamReader(attendanceStream));
         var attendanceStringData = attendanceReader.lines().collect(Collectors.joining("\n"));

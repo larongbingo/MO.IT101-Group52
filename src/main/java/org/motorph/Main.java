@@ -9,7 +9,17 @@ import org.motorph.payroll.repositories.ListTimesheetRepository;
 
 public class Main {
     public static void main(String[] args) {
-        var dataLoader = new LoadData();
+        var employeeStream = Main.class.getClassLoader().getResourceAsStream("employees.csv");
+        if (employeeStream == null) {
+            throw new RuntimeException("[MotorPH] Could not find employees.csv");
+        }
+
+        var attendanceStream = Main.class.getClassLoader().getResourceAsStream("attendance.csv");
+        if (attendanceStream == null) {
+            throw new RuntimeException("[MotorPH] Could not find attendance.csv");
+        }
+
+        var dataLoader = new LoadData(employeeStream, attendanceStream);
         var employeeLogin = dataLoader.LoadEmployees();
         var timesheets = dataLoader.LoadTimesheets();
 
