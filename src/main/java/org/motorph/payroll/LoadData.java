@@ -106,5 +106,3 @@ public class LoadData {
     }
 }
 
-/// Wrapper class for employee and login data
-record EmployeeLogin(List<Employee> employees, List<Login> logins) {}

@@ -1,9 +1,23 @@
 package org.motorph;
 
 import org.motorph.payroll.ConsolePayroll;
+import org.motorph.payroll.LoadData;
+import org.motorph.payroll.PayrollService;
+import org.motorph.payroll.repositories.ListEmployeeRepository;
+import org.motorph.payroll.repositories.ListLoginRepository;
+import org.motorph.payroll.repositories.ListTimesheetRepository;
 
 public class Main {
     public static void main(String[] args) {
-        new ConsolePayroll().Start();
+        var dataLoader = new LoadData();
+        var employeeLogin = dataLoader.LoadEmployees();
+        var timesheets = dataLoader.LoadTimesheets();
+
+        var employeeRepository = new ListEmployeeRepository(employeeLogin.employees());
+        var loginRepository = new ListLoginRepository(employeeLogin.logins(), employeeRepository);
+        var timesheetRepository = new ListTimesheetRepository(timesheets);
+        var payrollService = new PayrollService();
+
+        new ConsolePayroll(employeeRepository, loginRepository, timesheetRepository, payrollService).Start();
     }
 }

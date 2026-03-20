@@ -14,15 +14,26 @@ public class ConsolePayroll {
     private final TimesheetRepository timesheetRepository;
     private final PayrollService payrollService;
 
-    public ConsolePayroll() {
-        var dataLoader = new LoadData();
-        var employeeLogin = dataLoader.LoadEmployees();
-        var timesheets = dataLoader.LoadTimesheets();
+//    public ConsolePayroll() {
+//        var dataLoader = new LoadData();
+//        var employeeLogin = dataLoader.LoadEmployees();
+//        var timesheets = dataLoader.LoadTimesheets();
+//
+//        this.employeeRepository = new ListEmployeeRepository(employeeLogin.employees());
+//        this.loginRepository = new ListLoginRepository(employeeLogin.logins(), this.employeeRepository);
+//        this.timesheetRepository = new ListTimesheetRepository(timesheets);
+//        this.payrollService = new PayrollService();
+//    }
 
-        this.employeeRepository = new ListEmployeeRepository(employeeLogin.employees());
-        this.loginRepository = new ListLoginRepository(employeeLogin.logins(), this.employeeRepository);
-        this.timesheetRepository = new ListTimesheetRepository(timesheets);
-        this.payrollService = new PayrollService();
+    public ConsolePayroll(EmployeeRepository employeeRepository,
+                          LoginRepository loginRepository,
+                          TimesheetRepository timesheetRepository,
+                          PayrollService payrollService) {
+
+        this.employeeRepository = employeeRepository;
+        this.loginRepository = loginRepository;
+        this.timesheetRepository = timesheetRepository;
+        this.payrollService = payrollService;
     }
 
     public void Start() {
