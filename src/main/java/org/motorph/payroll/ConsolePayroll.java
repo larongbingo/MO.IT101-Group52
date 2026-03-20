@@ -9,10 +9,10 @@ import org.motorph.timesheet.TimesheetRepository;
 import java.util.stream.Collectors;
 
 public class ConsolePayroll {
-    private EmployeeRepository employeeRepository;
-    private LoginRepository loginRepository;
-    private TimesheetRepository timesheetRepository;
-    private PayrollService payrollService;
+    private final EmployeeRepository employeeRepository;
+    private final LoginRepository loginRepository;
+    private final TimesheetRepository timesheetRepository;
+    private final PayrollService payrollService;
 
     public ConsolePayroll() {
         var dataLoader = new LoadData();
