@@ -58,7 +58,7 @@ public class LoadData {
                             usNumberFormat.parse(x.getField("Basic Salary")).doubleValue()
                     );
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Issue caused by employee id = " + x.getField("Employee #"), e);
                 }
                 employees.add(employee);
 
