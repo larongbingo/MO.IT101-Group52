@@ -2,9 +2,7 @@ package org.motorph.timesheet;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,7 +11,7 @@ public interface TimesheetRepository {
     List<Timesheet> getAllTimesheetsByEmployeeId(String employeeId);
     List<String> getAllAvailableMonths();
     List<String> getAllAvailableMonthsByEmployeeId(String employeeId);
-    default List<Timesheet> getAllTimesheetsByEmployeeIdAndAvailableMonthString(String employeeId, String month) {
+    default List<Timesheet> getAllTimesheetsByEmployeeIdAndMonth(String employeeId, String month) {
         var formatter = new DateTimeFormatterBuilder()
                 .parseCaseInsensitive()
                 .appendPattern("MMMM yyyy")

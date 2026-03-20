@@ -91,14 +91,14 @@ public class ConsolePayroll {
         else if (selectedMonth.equalsIgnoreCase("all")) {
             for (var month : availableMonths) {
                 var timesheets = this.timesheetRepository
-                        .getAllTimesheetsByEmployeeIdAndAvailableMonthString(employee.EmployeeId, month);
+                        .getAllTimesheetsByEmployeeIdAndMonth(employee.EmployeeId, month);
                 var payroll = payrollService.generatePaySlip(employee, timesheets);
                 System.out.println(payroll);
             }
         }
         else if (availableMonths.contains(selectedMonth.toUpperCase())) {
             var timesheets = this.timesheetRepository
-                    .getAllTimesheetsByEmployeeIdAndAvailableMonthString(employee.EmployeeId, selectedMonth);
+                    .getAllTimesheetsByEmployeeIdAndMonth(employee.EmployeeId, selectedMonth);
             var payroll = payrollService.generatePaySlip(employee, timesheets);
             System.out.println(payroll);
         }
@@ -133,7 +133,7 @@ public class ConsolePayroll {
             else if (months.contains(month.toUpperCase())) {
                 for (var employee : employees) {
                     var timesheets = this.timesheetRepository
-                            .getAllTimesheetsByEmployeeIdAndAvailableMonthString(employee.EmployeeId, month);
+                            .getAllTimesheetsByEmployeeIdAndMonth(employee.EmployeeId, month);
                     var payroll = payrollService.generatePaySlip(employee, timesheets);
                     System.out.println("Payroll for " + employee.getBasicDetails());
                     System.out.println(payroll);
