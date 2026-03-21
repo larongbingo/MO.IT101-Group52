@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+/// Parses employee and attendance data from CSV streams
 public class LoadData {
     private final InputStream employeeStream;
     private final InputStream attendanceStream;
@@ -29,6 +30,7 @@ public class LoadData {
         this.attendanceStream = attendanceStream;
     }
 
+    /// Parses the employee and login data
     public EmployeeLogin LoadEmployees() throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
         List<Login> logins = new ArrayList<>();
@@ -83,6 +85,7 @@ public class LoadData {
         return new EmployeeLogin(employees, logins);
     }
 
+    /// Parses the attendance data
     public List<Timesheet> LoadTimesheets() throws RuntimeException {
         List<Timesheet> timesheets = new ArrayList<>();
 

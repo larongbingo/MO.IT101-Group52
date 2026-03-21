@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/// In-memory implementation of TimesheetRepository
 public class ListTimesheetRepository implements TimesheetRepository {
     private List<Timesheet> timesheets = List.of();
 
@@ -16,6 +17,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
         this.timesheets = timesheets;
     }
 
+    /// {@inheritDoc}
     @Override
     public List<Timesheet> getAllTimesheetsByEmployeeIdAndDateRange(String employeeId, LocalDateTime startDate, LocalDateTime endDate) {
         return timesheets.stream()
@@ -23,6 +25,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
                 .collect(Collectors.toList());
     }
 
+    /// {@inheritDoc}
     @Override
     public List<Timesheet> getAllTimesheetsByEmployeeId(String employeeId) {
         return timesheets.stream()
@@ -30,6 +33,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
                 .collect(Collectors.toList());
     }
 
+    /// {@inheritDoc}
     @Override
     public List<String> getAllAvailableMonths() {
         return timesheets.stream()
@@ -38,6 +42,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
                 .collect(Collectors.toList());
     }
 
+    /// {@inheritDoc}
     @Override
     public List<String> getAllAvailableMonthsByEmployeeId(String employeeId) {
         return timesheets.stream()
@@ -47,6 +52,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
                 .collect(Collectors.toList());
     }
 
+    /// Checks if a timesheet is within the specified date range
     private boolean IsTimesheetInDateRange(@NotNull Timesheet timesheet, LocalDateTime startDate, LocalDateTime endDate) {
         return timesheet.StartTime.isAfter(startDate) && timesheet.StartTime.isBefore(endDate);
     }

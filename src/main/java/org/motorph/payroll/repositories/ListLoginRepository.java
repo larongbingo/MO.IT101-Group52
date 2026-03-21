@@ -7,6 +7,7 @@ import org.motorph.employees.LoginRepository;
 
 import java.util.List;
 
+/// In-memory implementation of LoginRepository
 public class ListLoginRepository implements LoginRepository {
     private List<Login> logins = List.of();
     private EmployeeRepository employeeRepository;
@@ -16,6 +17,7 @@ public class ListLoginRepository implements LoginRepository {
         this.employeeRepository = employeeRepository;
     }
 
+    /// {@inheritDoc}
     @Override
     public Employee getEmployeeByCredentials(String username, String password) {
         var login = getLoginByUsername(username);
@@ -29,6 +31,7 @@ public class ListLoginRepository implements LoginRepository {
         return employeeRepository.getEmployeeByEmployeeId(login.EmployeeId);
     }
 
+    /// Fetches a Login data based on the username
     private Login getLoginByUsername(String username) {
         return logins.stream().filter(x -> x.Username.equals(username)).findFirst().orElse(null);
     }

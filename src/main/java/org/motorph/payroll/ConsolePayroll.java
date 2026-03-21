@@ -1,10 +1,13 @@
 package org.motorph.payroll;
 
 import org.motorph.employees.*;
+import org.motorph.timesheet.Timesheet;
 import org.motorph.timesheet.TimesheetRepository;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+/// Presentation and Business Rules to handle payroll operations
 public class ConsolePayroll {
     private final EmployeeRepository employeeRepository;
     private final LoginRepository loginRepository;
@@ -22,6 +25,7 @@ public class ConsolePayroll {
         this.payrollService = payrollService;
     }
 
+    /// Entry point to start the payroll operations
     public void start() {
         Employee currentEmployee = authenticateProcedure();
 
@@ -37,6 +41,7 @@ public class ConsolePayroll {
         }
     }
 
+    /// Asks the user to provide a username and password to authenticate
     private Employee authenticateProcedure() {
         System.out.print("[MOTORPH] Enter your username: ");
         var username = System.console().readLine();
@@ -52,6 +57,7 @@ public class ConsolePayroll {
         return employee;
     }
 
+    /// Asks the user to either select normal access or access other employee's payroll data
     private boolean questionAboutPayrollProcess() {
         System.out.println("[MotorPH] Process your payroll or select an employee to process payroll.");
         System.out.print("1 - Your payroll, 2 - Other employees' payroll: ");
@@ -74,6 +80,8 @@ public class ConsolePayroll {
         }
     }
 
+    /// The base access for all users.
+    /// Asks the user to select a month to process payroll for.
     private void normalAccessProcedure(Employee employee) {
         var availableMonths = timesheetRepository.getAllAvailableMonthsByEmployeeId(employee.EmployeeId);
 
@@ -107,6 +115,8 @@ public class ConsolePayroll {
 
     }
 
+    /// Access for the payroll team.
+    /// Allows the payroll team to process payroll for all employees or a specific employee.
     private void payrollAccessProcedure() {
         var employees = this.employeeRepository.getAllEmployees();
         System.out.println("[MotorPH] Please select an employee to process payroll."

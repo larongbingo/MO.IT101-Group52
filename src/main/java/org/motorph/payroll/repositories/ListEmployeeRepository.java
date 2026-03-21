@@ -6,6 +6,7 @@ import org.motorph.employees.EmployeeRepository;
 
 import java.util.List;
 
+/// In-memory implementation of EmployeeRepository
 public class ListEmployeeRepository implements EmployeeRepository {
     private List<Employee> employees = List.of();
 
@@ -13,11 +14,13 @@ public class ListEmployeeRepository implements EmployeeRepository {
         this.employees = employees;
     }
 
+    /// {@inheritDoc}
     @Override
     public List<Employee> getAllEmployees() {
         return employees;
     }
 
+    /// {@inheritDoc}
     @Override
     @Nullable
     public Employee getEmployeeByEmployeeId(String employeeId) {
