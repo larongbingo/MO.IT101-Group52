@@ -28,6 +28,6 @@ public class Main {
         var timesheetRepository = new ListTimesheetRepository(timesheets);
         var payrollService = new PayrollService();
 
-        new ConsolePayroll(employeeRepository, loginRepository, timesheetRepository, payrollService).Start();
+        new ConsolePayroll(employeeRepository, loginRepository, timesheetRepository, payrollService).start();
     }
 }

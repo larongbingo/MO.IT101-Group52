@@ -22,7 +22,7 @@ public class ConsolePayroll {
         this.payrollService = payrollService;
     }
 
-    public void Start() {
+    public void start() {
         Employee currentEmployee = authenticateProcedure();
 
         if (currentEmployee.IsPayrollStaff()) {
