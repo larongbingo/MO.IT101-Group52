@@ -3,9 +3,12 @@ package org.motorph.payroll;
 import org.motorph.employees.Employee;
 import org.motorph.timesheet.Timesheet;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PayrollService {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+
     public double countTotalWorkHours(List<Timesheet> timesheets) {
         return timesheets.stream().map(Timesheet::getTotalHours).reduce(0.0, Double::sum);
     }
@@ -100,8 +103,11 @@ public class PayrollService {
         var tax = calculateTax(taxableIncome);
         var netPay = taxableIncome - tax;
 
+        var firstDate = timesheets.getFirst().StartTime.format(formatter);
+        var lastDate = timesheets.getLast().EndTime.format(formatter);
+
         var sb = new StringBuilder();
-        sb.append("[MotorPH] === " + timesheets.getFirst().StartTime.getMonth() + " " + timesheets.getFirst().StartTime.getYear() + "\n");
+        sb.append("[MotorPH] ===" + firstDate + " - " + lastDate + "\n");
         sb.append("[MotorPH] Total Hours Worked: " + totalHours + "\n");
         sb.append("[MotorPH] Gross Pay: Php " + grossPay + "\n");
         sb.append("[MotorPH] SSS Contribution: Php " + sss + "\n");
