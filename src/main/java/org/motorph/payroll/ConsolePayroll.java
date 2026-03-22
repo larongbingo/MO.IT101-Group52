@@ -222,8 +222,11 @@ public class ConsolePayroll {
 
 record DateRange(LocalDateTime start, LocalDateTime end) {
     /// Parses a Year Month String that follows the given ProcessRange
+    ///
     /// if MONTH then first day of the month to last day of the month (the whole month)
+    ///
     /// if FIRST_CUTOFF then first day of the month to the 15th
+    ///
     /// if SECOND_CUTOFF then 16th to last day of the month
     public static DateRange parseYearMonthInRange(String month, ProcessRange rangeType) {
         var formatter = new DateTimeFormatterBuilder()
