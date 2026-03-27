@@ -91,8 +91,7 @@ public class PayrollService {
         else if (income < 24750) return 1102.50;
         else return 1125.00;
     }
-    
-    public String generatePaySlip(Employee employee, List<Timesheet> timesheets) {
+    public Payroll calculatePayroll(Employee employee, List<Timesheet> timesheets) {
         var totalHours = countTotalWorkHours(timesheets);
         var grossPay = calculateGrossPay(employee, timesheets);
         var sss = calculateSSSContribution(grossPay);
@@ -103,20 +102,36 @@ public class PayrollService {
         var tax = calculateTax(taxableIncome);
         var netPay = taxableIncome - tax;
 
-        var firstDate = timesheets.getFirst().StartTime.format(formatter);
-        var lastDate = timesheets.getLast().EndTime.format(formatter);
+        var firstDate = timesheets.getFirst().StartTime;
+        var lastDate = timesheets.getLast().EndTime;
 
-        var sb = new StringBuilder();
-        sb.append("[MotorPH] === " + firstDate + " - " + lastDate + "\n");
-        sb.append("[MotorPH] Total Hours Worked: " + totalHours + "\n");
-        sb.append("[MotorPH] Gross Pay: Php " + grossPay + "\n");
-        sb.append("[MotorPH] SSS Contribution: Php " + sss + "\n");
-        sb.append("[MotorPH] PhilHealth Contribution: Php " + philHealth + "\n");
-        sb.append("[MotorPH] Pag-Ibig Contribution: Php " + pagIbig + "\n");
-        sb.append("[MotorPH] Total Deductions: Php " + totalDeductions + "\n");
-        sb.append("[MotorPH] Taxable Income: Php " + taxableIncome + "\n");
-        sb.append("[MotorPH] Tax: Php " + tax + "\n");
-        sb.append("[MotorPH] Net Pay: Php " + netPay + "\n");
-        return sb.toString();
+        return new Payroll(
+                employee,
+                new DateRange(firstDate, lastDate),
+                totalHours,
+                grossPay,
+                sss,
+                philHealth,
+                pagIbig,
+                totalDeductions,
+                taxableIncome,
+                tax,
+                netPay);
+    }
+    public String generatePaySlip(Employee employee, List<Timesheet> timesheets) {
+        var payroll = calculatePayroll(employee, timesheets);
+        var firstDate = payroll.dateRange().start().format(formatter);
+        var lastDate = payroll.dateRange().end().format(formatter);
+
+        return "[MotorPH] === " + firstDate + " - " + lastDate + "\n" +
+                "[MotorPH] Total Hours Worked: " + payroll.totalHours() + "\n" +
+                "[MotorPH] Gross Pay: Php " + payroll.grossPay() + "\n" +
+                "[MotorPH] SSS Contribution: Php " + payroll.sssContribution() + "\n" +
+                "[MotorPH] PhilHealth Contribution: Php " + payroll.philHealthContribution() + "\n" +
+                "[MotorPH] Pag-Ibig Contribution: Php " + payroll.pagIbigContribution() + "\n" +
+                "[MotorPH] Total Deductions: Php " + payroll.totalDeductions() + "\n" +
+                "[MotorPH] Taxable Income: Php " + payroll.taxableIncome() + "\n" +
+                "[MotorPH] Tax: Php " + payroll.tax() + "\n" +
+                "[MotorPH] Net Pay: Php " + payroll.netPay() + "\n";
     }
 }
