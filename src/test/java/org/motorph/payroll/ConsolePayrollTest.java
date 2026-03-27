@@ -1,5 +1,6 @@
 package org.motorph.payroll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmployeeRepository;
@@ -16,17 +17,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ConsolePayrollTest {
+    private EmployeeRepository employeeRepository;
+    private LoginRepository loginRepository;
+    private TimesheetRepository timesheetRepository;
+    private PayrollService payrollService;
 
+    @BeforeEach
+    void setUp() {
+        employeeRepository = mock(EmployeeRepository.class);
+        loginRepository = mock(LoginRepository.class);
+        timesheetRepository = mock(TimesheetRepository.class);
+        payrollService = mock(PayrollService.class);
+    }
+
+    
     @Test
     void start_whenCredentialsAreInvalid_throwsAndStops() {
-        var employeeRepository = mock(EmployeeRepository.class);
-        var loginRepository = mock(LoginRepository.class);
-        var timesheetRepository = mock(TimesheetRepository.class);
-        var payrollService = mock(PayrollService.class);
-
+        // Arrange
         when(loginRepository.getEmployeeByCredentials("user", "wrong"))
                 .thenReturn(null);
 
+        // Act
         var sut = new ConsolePayroll(
                 employeeRepository,
                 loginRepository,
@@ -34,20 +45,16 @@ class ConsolePayrollTest {
                 payrollService,
                 new BufferedReader(new StringReader("user\nwrong\n"))
         );
-
         assertThrows(RuntimeException.class, sut::start);
 
+        // Assert
         verify(loginRepository).getEmployeeByCredentials("user", "wrong");
         verifyNoInteractions(employeeRepository, timesheetRepository, payrollService);
     }
 
     @Test
     void start_whenPayrollStaffAndChoosesNormalAccess_goesToNormalRoute() {
-        var employeeRepository = mock(EmployeeRepository.class);
-        var loginRepository = mock(LoginRepository.class);
-        var timesheetRepository = mock(TimesheetRepository.class);
-        var payrollService = mock(PayrollService.class);
-
+        // Arrange
         var employee = new Employee(
                 "E001",
                 "Test",
@@ -64,7 +71,6 @@ class ConsolePayrollTest {
                 10
         );
         when(loginRepository.getEmployeeByCredentials("user", "pass")).thenReturn(employee);
-
         when(timesheetRepository.getAllAvailableMonthsByEmployeeId("E001"))
                 .thenReturn(List.of("JANUARY 2024"));
         when(timesheetRepository.getAllTimesheetsByEmployeeIdAndDateRange(anyString(), any(), any()))
@@ -72,6 +78,7 @@ class ConsolePayrollTest {
         when(payrollService.generatePaySlip(eq(employee), anyList()))
                 .thenReturn("PAYSLIP");
 
+        // Act
         var sut = new ConsolePayroll(
                 employeeRepository,
                 loginRepository,
@@ -79,9 +86,9 @@ class ConsolePayrollTest {
                 payrollService,
                 new BufferedReader(new StringReader("user\npass\n1\n1\nJANUARY 2024\n"))
         );
-
         sut.start();
 
+        // Assert
         verify(loginRepository).getEmployeeByCredentials("user", "pass");
         verify(timesheetRepository).getAllAvailableMonthsByEmployeeId("E001");
         verify(timesheetRepository).getAllTimesheetsByEmployeeIdAndDateRange(eq("E001"), any(), any());
@@ -91,11 +98,7 @@ class ConsolePayrollTest {
 
     @Test
     void start_whenPayrollStaffAndChoosesOtherEmployees_goesToPayrollAccessRoute() {
-        var employeeRepository = mock(EmployeeRepository.class);
-        var loginRepository = mock(LoginRepository.class);
-        var timesheetRepository = mock(TimesheetRepository.class);
-        var payrollService = mock(PayrollService.class);
-
+        // Arrange
         var staffEmployee = new Employee(
                 "STAFF1",
                 "Test",
@@ -134,6 +137,7 @@ class ConsolePayrollTest {
         when(payrollService.generatePaySlip(any(Employee.class), anyList()))
                 .thenReturn("PAYSLIP");
 
+        // Act
         var sut = new ConsolePayroll(
                 employeeRepository,
                 loginRepository,
@@ -141,9 +145,9 @@ class ConsolePayrollTest {
                 payrollService,
                 new BufferedReader(new StringReader("user\npass\n2\nE001\n1\nJANUARY 2024\n"))
         );
-
         sut.start();
 
+        // Assert
         verify(loginRepository).getEmployeeByCredentials("user", "pass");
         verify(employeeRepository).getAllEmployees();
         verify(timesheetRepository).getAllAvailableMonthsByEmployeeId("E001");
@@ -152,11 +156,7 @@ class ConsolePayrollTest {
 
     @Test
     void start_whenNotPayrollStaff_skipsPayrollChoiceAndUsesNormalRoute() {
-        var employeeRepository = mock(EmployeeRepository.class);
-        var loginRepository = mock(LoginRepository.class);
-        var timesheetRepository = mock(TimesheetRepository.class);
-        var payrollService = mock(PayrollService.class);
-
+        // Arrange
         var employee = new Employee(
                 "E001",
                 "Test",
@@ -173,7 +173,6 @@ class ConsolePayrollTest {
                 10
         );
         when(loginRepository.getEmployeeByCredentials("user", "pass")).thenReturn(employee);
-
         when(timesheetRepository.getAllAvailableMonthsByEmployeeId("E001"))
                 .thenReturn(List.of("JANUARY 2024"));
         when(timesheetRepository.getAllTimesheetsByEmployeeIdAndDateRange(anyString(), any(), any()))
@@ -181,6 +180,7 @@ class ConsolePayrollTest {
         when(payrollService.generatePaySlip(eq(employee), anyList()))
                 .thenReturn("PAYSLIP");
 
+        // Act
         var sut = new ConsolePayroll(
                 employeeRepository,
                 loginRepository,
@@ -188,9 +188,9 @@ class ConsolePayrollTest {
                 payrollService,
                 new BufferedReader(new StringReader("user\npass\n1\nJANUARY 2024\n"))
         );
-
         sut.start();
 
+        // Assert
         verify(loginRepository).getEmployeeByCredentials("user", "pass");
         verifyNoInteractions(employeeRepository);
         verify(timesheetRepository).getAllAvailableMonthsByEmployeeId("E001");
