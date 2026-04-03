@@ -1,0 +1,26 @@
+product: jvm/app
+
+dependencies:
+  # implementation("de.siegmar:fastcsv:4.1.1")
+  - de.siegmar:fastcsv:4.1.1
+
+test-dependencies:
+  # testImplementation(platform("org.junit:junit-bom:5.10.0"))
+  - bom: org.junit:junit-bom:5.10.0
+
+  # testImplementation("org.junit.jupiter:junit-jupiter")
+  - org.junit.jupiter:junit-jupiter
+
+  # testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  - org.junit.platform:junit-platform-launcher:
+      scope: runtime-only
+
+  # testImplementation("org.mockito:mockito-core:5.23.0")
+  - org.mockito:mockito-core:5.23.0
+
+  # testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
+  - org.mockito:mockito-junit-jupiter:5.23.0
+
+settings:
+  jvm:
+    release: 21 # Ensure this matches your target JDK
