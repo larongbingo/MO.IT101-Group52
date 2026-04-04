@@ -1,0 +1,5 @@
+modules:
+  - android-app
+  - jvm-app
+  - shared
+  - motorph-payroll-console

@@ -1,4 +1,6 @@
-product: jvm/app
+product:
+  type: lib
+  platforms: [ jvm, android ]
 
 dependencies:
   # implementation("de.siegmar:fastcsv:4.1.1")

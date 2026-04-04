@@ -1,0 +1,12 @@
+product:
+  type: lib
+  platforms: [jvm, android]
+
+dependencies:
+  - ../motorph-payroll-console
+  - $compose.foundation: exported
+  - $compose.material3: exported
+
+settings:
+  compose:
+    enabled: true

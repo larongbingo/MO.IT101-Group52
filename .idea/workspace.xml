@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmperLocalSettings">
+    <option name="autoSyncWasEnabled" value="true" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a428c152-4ef0-4cbb-87e2-32f990086cda" name="Changes" comment="refactor: move project to amper">
+      <change beforePath="$PROJECT_DIR$/amper.bat" beforeDir="false" afterPath="$PROJECT_DIR$/amper.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/module.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/attendance.csv" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/resources/attendance.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/employees.csv" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/resources/employees.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/EmploymentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/EmploymentStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/LoginRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/LoginRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/ManageEmployeesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/ManageEmployeesService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/dto/NewEmployeeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/dto/NewEmployeeDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/dto/UpdateEmployeeDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/dto/UpdateEmployeeDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/employees/encryption/StringEncryption.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/employees/encryption/StringEncryption.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/ConsolePayroll.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/ConsolePayroll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/DateRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/DateRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/EmployeeLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/EmployeeLogin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/LoadData.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/LoadData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/Payroll.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/Payroll.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/PayrollService.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/PayrollService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/ProcessRange.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/ProcessRange.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/repositories/ListEmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/repositories/ListEmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/repositories/ListLoginRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/repositories/ListLoginRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/payroll/repositories/ListTimesheetRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/payroll/repositories/ListTimesheetRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/AttendanceType.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/AttendanceType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/AvailableMonth.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/AvailableMonth.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/TimeClockService.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/TimeClockService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/Timesheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/Timesheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/TimesheetRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/TimesheetRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/dto/EmployeeLeaveRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/dto/EmployeeLeaveRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/dto/EmployeeTimeInDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/dto/EmployeeTimeInDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/org/motorph/timesheet/dto/EmployeeTimeOutDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/src/org/motorph/timesheet/dto/EmployeeTimeOutDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/java/org/motorph/payroll/ConsolePayrollTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/test/java/org/motorph/payroll/ConsolePayrollTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/java/org/motorph/payroll/PayrollServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/motorph-payroll-console/test/java/org/motorph/payroll/PayrollServiceTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="repository" />
+    </option>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="45" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="AMPER">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MotorPH.Moit101" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MotorPH.Moit101" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="MotorPH.Moit101" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+        <option value="Record" />
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;larongbingo&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/larongbingo/MO.IT101-Group52&quot;,
+    &quot;accountId&quot;: &quot;a10e75f4-7166-4a0b-b24f-470822746327&quot;
+  }
+}</component>
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\laron\.gradle\wrapper\dists\gradle-9.0.0-bin\d6wjpkvcgsg3oed0qlfss3wgl\gradle-9.0.0" javaHome="C:\Users\laron\.jdks\openjdk-24.0.1" gradleVersion="9.0.0">
+    <option name="jvmArguments">
+      <list>
+        <option value="-Dandroid.home=C:\Users\laron\AppData\Local\Android\Sdk" />
+        <option value="-Didea.compose.hot-reload=true" />
+        <option value="-Didea.compose.hot-reload.version=2" />
+      </list>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="38QZ9gHcI2zgbhbz7cvqC7bPNYj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Amper.MotorPH.Moit101 - Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Amper.MotorPH.Moit101.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.org.motorph.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Gradle.Build MotorPH.Moit101.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.calculatePagIbigContribution_returnsCorrectContributionAmount.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.calculatePhilHealthContribution_returnsCorrectContributionAmount.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.calculateSSSContribution_returnsCorrectContributionAmount.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.calculateTax.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.calculateTax_returnsCorrectTaxAmount.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.countTotalWorkHours_returnsSumOfAllTimesheetHours.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.start_whenNotPayrollStaff_skipsPayrollChoiceAndUsesNormalRoute.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.start_whenPayrollStaffAndChoosesNormalAccess_goesToNormalRoute.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ConsolePayrollTest.start_whenPayrollStaffAndChoosesOtherEmployees_goesToPayrollAccessRoute.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MotorPH.Moit101 [:org.motorph.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MotorPH.Moit101 [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.MotorPH.Moit101 [clean].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/laron/IdeaProjects/MotorPH.Moit101&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/laron/IdeaProjects/MotorPH.Moit101/src/test/motorph.tests/src/main/kotlin/Main.kt&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.57701147&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101" />
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101\motorph-payroll-console" />
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101" />
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101\src\main\resources" />
+      <recent name="C:\Users\laron\IdeaProjects\MotorPH.Moit101\src\main\java" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.motorph.payroll.repositories" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="org.motorph.payroll" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Amper [Deprecated].MotorPH.Moit101">
+    <configuration name="MotorPH.Moit101 - Main" type="AmperGenericRunConfigurationType" factoryName="Amper" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="AMPER" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+            <option value="-m" />
+            <option value="MotorPH.Moit101" />
+            <option value="--main-class" />
+            <option value="org.motorph.Main" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>false</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="MotorPH.Moit101" type="AmperGenericRunConfigurationType" factoryName="Amper">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="AMPER" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="run" />
+            <option value="-m" />
+            <option value="MotorPH.Moit101" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>false</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Module jvm-app" type="Amper.Run" nameIsGenerated="true">
+      <option name="command" value="run" />
+      <EXTENSION ID="amper.run.common">
+        <option name="module" value="jvm-app" />
+      </EXTENSION>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="MotorPH_Moit101" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="MotorPH_Moit101" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a428c152-4ef0-4cbb-87e2-32f990086cda" name="Changes" comment="" />
+      <created>1768733609066</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1768733609066</updated>
+      <workItem from="1768733611002" duration="6497000" />
+      <workItem from="1768763898191" duration="30555000" />
+      <workItem from="1769192682720" duration="10169000" />
+      <workItem from="1769381986515" duration="759000" />
+      <workItem from="1769801068519" duration="1614000" />
+      <workItem from="1771693762938" duration="1677000" />
+      <workItem from="1771780155396" duration="928000" />
+      <workItem from="1772270590367" duration="16000" />
+      <workItem from="1773057946054" duration="40527000" />
+      <workItem from="1773300282962" duration="24005000" />
+      <workItem from="1773929526969" duration="1249000" />
+      <workItem from="1773944493804" duration="8270000" />
+      <workItem from="1773974257916" duration="1152000" />
+      <workItem from="1773975600985" duration="3891000" />
+      <workItem from="1774031202841" duration="4433000" />
+      <workItem from="1774069854566" duration="812000" />
+      <workItem from="1774070702687" duration="107000" />
+      <workItem from="1774070813838" duration="183000" />
+      <workItem from="1774071013556" duration="139000" />
+      <workItem from="1774071168233" duration="1133000" />
+      <workItem from="1774072341074" duration="832000" />
+      <workItem from="1774159120916" duration="15014000" />
+      <workItem from="1774325107037" duration="12000" />
+      <workItem from="1774601245396" duration="4030000" />
+      <workItem from="1774612893471" duration="11308000" />
+      <workItem from="1774627287640" duration="443000" />
+      <workItem from="1774661668056" duration="6531000" />
+      <workItem from="1775190516014" duration="1919000" />
+      <workItem from="1775192455788" duration="1680000" />
+      <workItem from="1775194386731" duration="373000" />
+      <workItem from="1775205022894" duration="5818000" />
+      <workItem from="1775294465986" duration="5838000" />
+    </task>
+    <task id="LOCAL-00009" summary="feat: implement csv loading">
+      <option name="closed" value="true" />
+      <created>1773119122628</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1773119122628</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor: use static">
+      <option name="closed" value="true" />
+      <created>1773148287067</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1773148287067</updated>
+    </task>
+    <task id="LOCAL-00011" summary="feat: implement basic login">
+      <option name="closed" value="true" />
+      <created>1773148625633</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1773148625633</updated>
+    </task>
+    <task id="LOCAL-00012" summary="feat: implement gross salary calculation">
+      <option name="closed" value="true" />
+      <created>1773477026442</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1773477026442</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat: complete implementation of tax, deductions and net pay computation">
+      <option name="closed" value="true" />
+      <created>1773502147211</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1773502147211</updated>
+    </task>
+    <task id="LOCAL-00014" summary="refactor: rename ProcessEmployeePayroll">
+      <option name="closed" value="true" />
+      <created>1773502348054</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1773502348054</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat: payroll staff's actions to process employee payroll">
+      <option name="closed" value="true" />
+      <created>1773505795355</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1773505795355</updated>
+    </task>
+    <task id="LOCAL-00016" summary="docs: add limitations">
+      <option name="closed" value="true" />
+      <created>1773506220471</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1773506220471</updated>
+    </task>
+    <task id="LOCAL-00017" summary="chore: cleanup">
+      <option name="closed" value="true" />
+      <created>1773561471150</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1773561471150</updated>
+    </task>
+    <task id="LOCAL-00018" summary="refactor: move to ConsolePayroll">
+      <option name="closed" value="true" />
+      <created>1773952768520</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1773952768520</updated>
+    </task>
+    <task id="LOCAL-00019" summary="chore: cleanup imports">
+      <option name="closed" value="true" />
+      <created>1773974287639</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1773974287639</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix: add missing details about employee">
+      <option name="closed" value="true" />
+      <created>1773974520307</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1773974520307</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix: add missing details about employee">
+      <option name="closed" value="true" />
+      <created>1773974885445</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1773974885445</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fix: only process the selected employee">
+      <option name="closed" value="true" />
+      <created>1773975101788</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975101788</updated>
+    </task>
+    <task id="LOCAL-00023" summary="refactor: line up to 80 characters length">
+      <option name="closed" value="true" />
+      <created>1773975158845</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975158845</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactor: move data loading logic to a separate class">
+      <option name="closed" value="true" />
+      <created>1773975751922</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975751922</updated>
+    </task>
+    <task id="LOCAL-00025" summary="chore: cleanup imports">
+      <option name="closed" value="true" />
+      <created>1773975773736</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975773736</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor: use local variable">
+      <option name="closed" value="true" />
+      <created>1773975913657</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975913658</updated>
+    </task>
+    <task id="LOCAL-00027" summary="refactor: use final on props">
+      <option name="closed" value="true" />
+      <created>1773975938279</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1773975938279</updated>
+    </task>
+    <task id="LOCAL-00028" summary="refactor: move DI to main method">
+      <option name="closed" value="true" />
+      <created>1774031435412</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1774031435412</updated>
+    </task>
+    <task id="LOCAL-00029" summary="chore: cleanup">
+      <option name="closed" value="true" />
+      <created>1774031450991</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1774031450991</updated>
+    </task>
+    <task id="LOCAL-00030" summary="refactor: use camel case">
+      <option name="closed" value="true" />
+      <created>1774031502798</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1774031502798</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feat: add details when parsing employee data on exception thrown">
+      <option name="closed" value="true" />
+      <created>1774031624296</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1774031624296</updated>
+    </task>
+    <task id="LOCAL-00032" summary="refactor: move streams into constructor and move DI to main method">
+      <option name="closed" value="true" />
+      <created>1774031802943</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1774031802943</updated>
+    </task>
+    <task id="LOCAL-00033" summary="refactor: rename to reduce length">
+      <option name="closed" value="true" />
+      <created>1774032197304</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1774032197304</updated>
+    </task>
+    <task id="LOCAL-00034" summary="refactor: rename to match java standard">
+      <option name="closed" value="true" />
+      <created>1774065501802</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1774065501802</updated>
+    </task>
+    <task id="LOCAL-00035" summary="refactor: move common logic to a method">
+      <option name="closed" value="true" />
+      <created>1774065888272</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1774065888272</updated>
+    </task>
+    <task id="LOCAL-00036" summary="docs: add class and method docs">
+      <option name="closed" value="true" />
+      <created>1774067151594</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1774067151594</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactor: rename methods to match java std">
+      <option name="closed" value="true" />
+      <created>1774069915587</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1774069915587</updated>
+    </task>
+    <task id="LOCAL-00038" summary="docs: add inline docs on main method">
+      <option name="closed" value="true" />
+      <created>1774069926024</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1774069926024</updated>
+    </task>
+    <task id="LOCAL-00039" summary="refactor: use mapreduce instead of loop">
+      <option name="closed" value="true" />
+      <created>1774070153627</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1774070153628</updated>
+    </task>
+    <task id="LOCAL-00040" summary="feat: print date range in the give list of timesheets">
+      <option name="closed" value="true" />
+      <created>1774070403799</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1774070403799</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fix: add space">
+      <option name="closed" value="true" />
+      <created>1774159206832</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1774159206832</updated>
+    </task>
+    <task id="LOCAL-00042" summary="refactor: replace broken System.console with InputStreamReader and BufferedReader">
+      <option name="closed" value="true" />
+      <created>1774159275909</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1774159275909</updated>
+    </task>
+    <task id="LOCAL-00043" summary="refactor: make BufferedReader injectable">
+      <option name="closed" value="true" />
+      <created>1774171940505</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1774171940505</updated>
+    </task>
+    <task id="LOCAL-00044" summary="feat: implement semi monthly payroll">
+      <option name="closed" value="true" />
+      <created>1774174068496</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1774174068496</updated>
+    </task>
+    <task id="LOCAL-00045" summary="docs: spacing">
+      <option name="closed" value="true" />
+      <created>1774174105511</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1774174105511</updated>
+    </task>
+    <task id="LOCAL-00046" summary="refactor: make payroll calculations testable">
+      <option name="closed" value="true" />
+      <created>1774612452847</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1774612452847</updated>
+    </task>
+    <task id="LOCAL-00047" summary="refactor: move ProcessRange to a solo file">
+      <option name="closed" value="true" />
+      <created>1774614477145</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1774614477145</updated>
+    </task>
+    <task id="LOCAL-00048" summary="test: add unit test for payroll">
+      <option name="closed" value="true" />
+      <created>1774617042457</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1774617042457</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fix: remove incorrect max logic">
+      <option name="closed" value="true" />
+      <created>1774617060014</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1774617060014</updated>
+    </task>
+    <task id="LOCAL-00050" summary="fix: cap contribution to 100">
+      <option name="closed" value="true" />
+      <created>1774617084730</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1774617084732</updated>
+    </task>
+    <task id="LOCAL-00051" summary="chore: rename to PayrollServiceTest">
+      <option name="closed" value="true" />
+      <created>1774617432964</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1774617432964</updated>
+    </task>
+    <task id="LOCAL-00052" summary="test: add unit tests for authentication behavior in start()">
+      <option name="closed" value="true" />
+      <created>1774626335715</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1774626335715</updated>
+    </task>
+    <task id="LOCAL-00053" summary="refactor: move common vars into class props">
+      <option name="closed" value="true" />
+      <created>1774627674405</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1774627674406</updated>
+    </task>
+    <task id="LOCAL-00054" summary="chore: add mockito">
+      <option name="closed" value="true" />
+      <created>1774662205310</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1774662205311</updated>
+    </task>
+    <task id="LOCAL-00055" summary="refactor: move employee data as a prop">
+      <option name="closed" value="true" />
+      <created>1775191546626</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1775191546627</updated>
+    </task>
+    <task id="LOCAL-00056" summary="refactor: move project to amper">
+      <option name="closed" value="true" />
+      <created>1775205101128</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1775205101129</updated>
+    </task>
+    <task id="LOCAL-00057" summary="refactor: move project to amper">
+      <option name="closed" value="true" />
+      <created>1775205163888</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1775205163889</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor: move streams into constructor and move DI to main method" />
+    <MESSAGE value="refactor: rename to reduce length" />
+    <MESSAGE value="refactor: rename to match java standard" />
+    <MESSAGE value="refactor: move common logic to a method" />
+    <MESSAGE value="docs: add class and method docs" />
+    <MESSAGE value="refactor: rename methods to match java std" />
+    <MESSAGE value="docs: add inline docs on main method" />
+    <MESSAGE value="refactor: use mapreduce instead of loop" />
+    <MESSAGE value="feat: print date range in the give list of timesheets" />
+    <MESSAGE value="fix: add space" />
+    <MESSAGE value="refactor: replace broken System.console with InputStreamReader and BufferedReader" />
+    <MESSAGE value="refactor: make BufferedReader injectable" />
+    <MESSAGE value="feat: implement semi monthly payroll" />
+    <MESSAGE value="docs: spacing" />
+    <MESSAGE value="refactor: make payroll calculations testable" />
+    <MESSAGE value="refactor: move ProcessRange to a solo file" />
+    <MESSAGE value="test: add unit test for payroll" />
+    <MESSAGE value="fix: remove incorrect max logic" />
+    <MESSAGE value="fix: cap contribution to 100" />
+    <MESSAGE value="chore: rename to PayrollServiceTest" />
+    <MESSAGE value="test: add unit tests for authentication behavior in start()" />
+    <MESSAGE value="refactor: move common vars into class props" />
+    <MESSAGE value="chore: add mockito" />
+    <MESSAGE value="refactor: move employee data as a prop" />
+    <MESSAGE value="refactor: move project to amper" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: move project to amper" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/motorph-payroll-console/test/motorph.tests/src/main/kotlin/Main.kt</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
