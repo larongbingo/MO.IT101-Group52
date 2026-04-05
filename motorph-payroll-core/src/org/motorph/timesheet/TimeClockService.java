@@ -1,6 +1,5 @@
 package org.motorph.timesheet;
 
-import org.motorph.employees.Employee;
 import org.motorph.employees.EmployeeRepository;
 import org.motorph.timesheet.dto.EmployeeLeaveRequestDto;
 import org.motorph.timesheet.dto.EmployeeTimeInDto;

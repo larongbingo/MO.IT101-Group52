@@ -1,7 +1,5 @@
 package org.motorph.payroll.repositories;
 
-import org.jetbrains.annotations.NotNull;
-import org.motorph.timesheet.AvailableMonth;
 import org.motorph.timesheet.Timesheet;
 import org.motorph.timesheet.TimesheetRepository;
 
@@ -53,7 +51,7 @@ public class ListTimesheetRepository implements TimesheetRepository {
     }
 
     /// Checks if a timesheet is within the specified date range
-    private boolean IsTimesheetInDateRange(@NotNull Timesheet timesheet, LocalDateTime startDate, LocalDateTime endDate) {
+    private boolean IsTimesheetInDateRange(Timesheet timesheet, LocalDateTime startDate, LocalDateTime endDate) {
         return timesheet.StartTime.isAfter(startDate) && timesheet.StartTime.isBefore(endDate);
     }
 }

@@ -1,6 +1,5 @@
 package org.motorph;
 
-import org.motorph.payroll.ConsolePayroll;
 import org.motorph.payroll.LoadData;
 import org.motorph.payroll.PayrollService;
 import org.motorph.payroll.repositories.ListEmployeeRepository;

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class Timesheet {
     public Timesheet(String employeeId, LocalDateTime startTime, LocalDateTime endTime) {

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 ///
 /// https://docs.google.com/spreadsheets/u/2/d/1mWxdCuYCmTd8n3DrNVxIb912xT8dWFCsQTUc2owv2UQ/copy
 class PayrollServiceTest {
-    private final PayrollService sut = new PayrollService();
+    private final org.motorph.payroll.PayrollService sut = new org.motorph.payroll.PayrollService();
 
     @Test
     void countTotalWorkHours_returnsSumOfAllTimesheetHours() {

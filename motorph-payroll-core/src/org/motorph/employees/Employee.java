@@ -1,15 +1,13 @@
 package org.motorph.employees;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Employee {
-    public Employee(@NotNull String employeeId, String lastName, String firstName, LocalDate birthday, String address,
+    public Employee(String employeeId, String lastName, String firstName, LocalDate birthday, String address,
                     String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
-                    String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
+                    String pagibigMemberIdNumber, org.motorph.employees.EmploymentStatus employmentStatus, String position,
                     double basicSalary) {
         Objects.requireNonNull(employeeId);
         Objects.requireNonNull(lastName);
@@ -39,7 +37,6 @@ public class Employee {
         this.BasicSalary = basicSalary;
     }
 
-    @NotNull
     public final String EmployeeId;
     public String LastName;
     public String FirstName;
@@ -66,18 +63,16 @@ public class Employee {
         return EmployeeId + "," + getFullName() + "," + Position;
     }
 
-    @NotNull
     public double getGrossSemiMonthlySalaryRate() {
         return BasicSalary / 2;
     }
 
-    @NotNull
     public double getGrossHourlySalaryRate() {
         // (BasicSalary / 21) / 8
         return (BasicSalary / 21) / 8;
     }
 
     public boolean IsPayrollStaff() {
-        return Position.toLowerCase().contains("payroll");
+        return Position.toLowerCase().contains("org/motorph/payroll");
     }
 }

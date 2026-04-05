@@ -1,6 +1,5 @@
 package org.motorph.payroll.repositories;
 
-import org.jetbrains.annotations.Nullable;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmployeeRepository;
 
@@ -22,7 +21,6 @@ public class ListEmployeeRepository implements EmployeeRepository {
 
     /// {@inheritDoc}
     @Override
-    @Nullable
     public Employee getEmployeeByEmployeeId(String employeeId) {
         return employees.stream().filter(x -> x.EmployeeId.equals(employeeId)).findFirst().orElse(null);
     }
