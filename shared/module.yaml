@@ -3,7 +3,6 @@ product:
   platforms: [jvm, android]
 
 dependencies:
-  - ../motorph-payroll-console
   - $compose.foundation: exported
   - $compose.material3: exported
 
