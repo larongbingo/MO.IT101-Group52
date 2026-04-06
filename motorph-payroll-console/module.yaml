@@ -4,6 +4,7 @@ product:
 
 dependencies:
   - ../motorph-payroll-core
+  - de.siegmar:fastcsv:4.1.1
 
 test-dependencies:
   - ../motorph-payroll-core
