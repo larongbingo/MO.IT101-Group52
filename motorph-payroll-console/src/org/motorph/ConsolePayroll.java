@@ -67,10 +67,10 @@ public class ConsolePayroll {
 
     /// Asks the user to provide a username and password to authenticate
     private Employee authenticateProcedure() {
-        System.out.print("[MOTORPH] Enter your username: ");
+        System.out.println("[MOTORPH] Enter your username: ");
         var username = readLineOrThrow("[MOTORPH] No username entered");
 
-        System.out.print("[MOTORPH] Enter your password: ");
+        System.out.println("[MOTORPH] Enter your password: ");
         var password = readLineOrThrow("[MOTORPH] No password entered");
 
         var employee = this.loginRepository.getEmployeeByCredentials(username, password);
@@ -85,7 +85,7 @@ public class ConsolePayroll {
     /// Asks the user to either select normal access or access other employee's payroll data
     private boolean questionAboutPayrollProcess() {
         System.out.println("[MotorPH] Process your payroll or select an employee to process payroll.");
-        System.out.print("1 - Your payroll, 2 - Other employees' payroll: ");
+        System.out.println("1 - Your payroll, 2 - Other employees' payroll: ");
         var option = readLineOrThrow("[MotorPH] No option selected");
         switch (option) {
             case "1" -> {
