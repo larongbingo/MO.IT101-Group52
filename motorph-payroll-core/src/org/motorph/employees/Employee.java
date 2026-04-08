@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Employee {
     public Employee(String employeeId, String lastName, String firstName, LocalDate birthday, String address,
                     String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
-                    String pagibigMemberIdNumber, org.motorph.employees.EmploymentStatus employmentStatus, String position,
+                    String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
                     double basicSalary) {
         Objects.requireNonNull(employeeId);
         Objects.requireNonNull(lastName);
@@ -21,7 +21,6 @@ public class Employee {
         Objects.requireNonNull(pagibigMemberIdNumber);
         Objects.requireNonNull(employmentStatus);
         Objects.requireNonNull(position);
-        Objects.requireNonNull(basicSalary);
         this.EmployeeId = employeeId;
         this.LastName = lastName;
         this.FirstName = firstName;
