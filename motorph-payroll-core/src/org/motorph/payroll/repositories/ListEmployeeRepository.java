@@ -1,5 +1,7 @@
 package org.motorph.payroll.repositories;
 
+import org.motorph.core.MotorPhException;
+import org.motorph.core.results.Result;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmployeeRepository;
 
@@ -11,6 +13,11 @@ public class ListEmployeeRepository implements EmployeeRepository {
 
     public ListEmployeeRepository(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    @Override
+    public Result<Employee> addEmployee(Employee newEmployee) {
+        return Result.failure(new MotorPhException("Method not implemented"));
     }
 
     /// {@inheritDoc}
