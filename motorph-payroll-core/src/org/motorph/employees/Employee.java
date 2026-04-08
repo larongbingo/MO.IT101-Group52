@@ -1,6 +1,7 @@
 package org.motorph.employees;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -53,6 +54,9 @@ public class Employee {
     public String SupervisorId;
 
     public double BasicSalary;
+
+    public LocalDateTime DeletedAt;
+    public LocalDateTime CreatedAt = LocalDateTime.now();
 
     public String getFullName() {
         return FirstName + " " + LastName;
