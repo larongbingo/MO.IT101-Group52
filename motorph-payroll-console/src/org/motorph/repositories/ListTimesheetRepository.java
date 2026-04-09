@@ -1,4 +1,4 @@
-package org.motorph.payroll.repositories;
+package org.motorph.repositories;
 
 import org.motorph.timesheet.Timesheet;
 import org.motorph.timesheet.TimesheetRepository;

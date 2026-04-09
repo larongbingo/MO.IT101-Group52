@@ -1,9 +1,9 @@
 package org.motorph;
 
 import org.motorph.payroll.PayrollService;
-import org.motorph.payroll.repositories.ListEmployeeRepository;
-import org.motorph.payroll.repositories.ListLoginRepository;
-import org.motorph.payroll.repositories.ListTimesheetRepository;
+import org.motorph.repositories.ListEmployeeRepository;
+import org.motorph.repositories.ListLoginRepository;
+import org.motorph.repositories.ListTimesheetRepository;
 
 public class Main {
     /// Main composition for the ConsolePayroll app
