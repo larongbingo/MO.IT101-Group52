@@ -1,8 +1,11 @@
 package org.motorph;
 
 import de.siegmar.fastcsv.reader.CsvReader;
+import org.motorph.core.MotorPhException;
+import org.motorph.core.results.Failure;
+import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
-import org.motorph.employees.EmploymentStatus;
+import org.motorph.employees.dto.NewEmployeeDto;
 import org.motorph.employees.login.Login;
 import org.motorph.payroll.EmployeeLogin;
 import org.motorph.timesheet.Timesheet;
@@ -10,14 +13,10 @@ import org.motorph.timesheet.Timesheet;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /// Parses employee and attendance data from CSV streams
@@ -35,8 +34,6 @@ public class LoadData {
         List<Employee> employees = new ArrayList<>();
         List<Login> logins = new ArrayList<>();
 
-        var usNumberFormat = NumberFormat.getInstance(Locale.US);
-
         var employeeReader = new BufferedReader(new InputStreamReader(employeeStream));
         var employeeStringData = employeeReader.lines().collect(Collectors.joining("\n"));
 
@@ -44,28 +41,30 @@ public class LoadData {
         try
         {
             employeeCsv.stream().forEach(x -> {
-                Employee employee = null;
-                try {
-                    employee = new Employee(
-                            x.getField("Employee #"),
-                            x.getField("Last Name"),
-                            x.getField("First Name"),
-                            LocalDate.parse(x.getField("Birthday"), DateTimeFormatter.ofPattern("MM/dd/yyyy")),
-                            x.getField("Address"),
-                            x.getField("Phone Number"),
-                            x.getField("SSS #"),
-                            x.getField("Philhealth #"),
-                            x.getField("TIN #"),
-                            x.getField("Pag-ibig #"),
-                            x.getField("Status").equalsIgnoreCase("regular")
-                                    ? EmploymentStatus.Regular
-                                    : EmploymentStatus.Probationary,
-                            x.getField("Position"),
-                            usNumberFormat.parse(x.getField("Basic Salary")).doubleValue()
-                    );
-                } catch (ParseException e) {
-                    throw new RuntimeException("Issue caused by employee id = " + x.getField("Employee #"), e);
+                var employeeDto = new NewEmployeeDto(
+                        x.getField("Employee #"),
+                        x.getField("Last Name"),
+                        x.getField("First Name"),
+                        x.getField("Birthday"),
+                        x.getField("Address"),
+                        x.getField("Phone Number"),
+                        x.getField("SSS #"),
+                        x.getField("Philhealth #"),
+                        x.getField("TIN #"),
+                        x.getField("Pag-ibig #"),
+                        x.getField("Status"),
+                        x.getField("Position"),
+                        x.getField("Basic Salary"),
+                        null
+                );
+
+                var employeeResult = employeeDto.toEmployee();
+                if (employeeResult instanceof Failure<Employee>(MotorPhException exception)) {
+                    System.out.println("[MotorPH] Error parsing employees.csv \n" + exception.getMessage());
+                    return;
                 }
+
+                var employee = ((Success<Employee>)employeeResult).value();
                 employees.add(employee);
 
                 var login = new Login(
