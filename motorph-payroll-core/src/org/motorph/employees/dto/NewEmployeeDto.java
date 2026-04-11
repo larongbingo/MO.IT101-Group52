@@ -37,7 +37,7 @@ public record NewEmployeeDto(
             var employee = new Employee(
                     this.employeeId(),
                     this.lastName(),
-                    this.lastName(),
+                    this.firstName(),
                     LocalDate.parse(this.birthday(), DateTimeFormatter.ofPattern("MM/dd/yyyy")),
                     this.address(),
                     this.phoneNumber(),
