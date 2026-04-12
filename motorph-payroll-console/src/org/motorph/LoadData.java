@@ -60,7 +60,8 @@ public class LoadData {
 
                 var employeeResult = employeeDto.toEmployee();
                 if (employeeResult instanceof Failure<Employee>(MotorPhException exception)) {
-                    System.out.println("[MotorPH] Error parsing employees.csv \n" + exception.getMessage());
+                    System.out.println("[MotorPH] Error parsing employee id " + x.getField("Employee #"));
+                    System.out.println(exception.getMessage());
                     return;
                 }
 
