@@ -6,10 +6,36 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Employee {
+    /// Constructor for Domain Object
     public Employee(String employeeId, String lastName, String firstName, LocalDate birthday, String address,
                     String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
                     String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
                     double basicSalary) {
+        this(
+                employeeId,
+                lastName,
+                firstName,
+                birthday,
+                address,
+                phoneNumber,
+                sssNumber,
+                philHealthNumber,
+                taxIdNumber,
+                pagibigMemberIdNumber,
+                employmentStatus,
+                position,
+                basicSalary,
+                null,
+                LocalDateTime.now(),
+                null
+        );
+    }
+
+    /// Constructor for ORM
+    public Employee(String employeeId, String lastName, String firstName, LocalDate birthday, String address,
+                    String phoneNumber, String sssNumber, String philHealthNumber, String taxIdNumber,
+                    String pagibigMemberIdNumber, EmploymentStatus employmentStatus, String position,
+                    double basicSalary, String supervisorId, LocalDateTime createdAt, LocalDateTime deletedAt) {
         Objects.requireNonNull(employeeId);
         Objects.requireNonNull(lastName);
         Objects.requireNonNull(firstName);
@@ -22,6 +48,7 @@ public class Employee {
         Objects.requireNonNull(pagibigMemberIdNumber);
         Objects.requireNonNull(employmentStatus);
         Objects.requireNonNull(position);
+        Objects.requireNonNull(createdAt);
         this.EmployeeId = employeeId;
         this.LastName = lastName;
         this.FirstName = firstName;
@@ -35,6 +62,9 @@ public class Employee {
         this.EmploymentStatus = employmentStatus;
         this.Position = position;
         this.BasicSalary = basicSalary;
+        this.SupervisorId = supervisorId;
+        this.CreatedAt = createdAt;
+        this.DeletedAt = deletedAt;
     }
 
     public final String EmployeeId;
@@ -56,7 +86,7 @@ public class Employee {
     public double BasicSalary;
 
     public LocalDateTime DeletedAt;
-    public LocalDateTime CreatedAt = LocalDateTime.now();
+    public final LocalDateTime CreatedAt;
 
     public String getFullName() {
         return FirstName + " " + LastName;
