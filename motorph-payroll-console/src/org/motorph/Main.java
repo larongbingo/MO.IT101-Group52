@@ -1,5 +1,8 @@
 package org.motorph;
 
+import org.motorph.employees.crypto.StringHashing;
+import org.motorph.employees.login.LoginService;
+import org.motorph.employees.login.LoginServiceImpl;
 import org.motorph.payroll.PayrollService;
 import org.motorph.repositories.ListEmployeeRepository;
 import org.motorph.repositories.ListLoginRepository;
@@ -26,10 +29,22 @@ public class Main {
         // Initialize services
         var employeeRepository = new ListEmployeeRepository(employeeLogin.employees());
         var loginRepository = new ListLoginRepository(employeeLogin.logins(), employeeRepository);
+        var noopStringHashing = new StringHashing() {
+            @Override
+            public String hash(String plaintext) {
+                return plaintext;
+            }
+
+            @Override
+            public boolean verify(String password, String hashedPassword) {
+                return password.equals(hashedPassword);
+            }
+        };
+        var loginService = new LoginServiceImpl(loginRepository, noopStringHashing, employeeRepository);
         var timesheetRepository = new ListTimesheetRepository(timesheets);
         var payrollService = new PayrollService();
 
         // Start application
-        new ConsolePayroll(employeeRepository, loginRepository, timesheetRepository, payrollService).start();
+        new ConsolePayroll(employeeRepository, loginService, timesheetRepository, payrollService).start();
     }
 }

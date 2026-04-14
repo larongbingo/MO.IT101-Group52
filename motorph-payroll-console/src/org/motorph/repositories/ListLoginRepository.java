@@ -30,20 +30,6 @@ public class ListLoginRepository implements LoginRepository {
     }
 
     /// {@inheritDoc}
-    @Override
-    public Employee getEmployeeByCredentials(String username, String password) {
-        var login = getLoginByUsername(username);
-
-        if (login == null)
-            return null;
-
-        if (!login.Password.equals(password))
-            return null;
-
-        return employeeRepository.getEmployeeByEmployeeId(login.EmployeeId);
-    }
-
-    /// {@inheritDoc}
     public Login getLoginByUsername(String username) {
         return logins.stream().filter(x -> x.Username.equals(username)).findFirst().orElse(null);
     }

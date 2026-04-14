@@ -1,8 +1,9 @@
 package org.motorph;
 
+import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmployeeRepository;
-import org.motorph.employees.login.LoginRepository;
+import org.motorph.employees.login.LoginService;
 import org.motorph.payroll.DateRange;
 import org.motorph.payroll.PayrollService;
 import org.motorph.payroll.ProcessRange;
@@ -18,19 +19,19 @@ import java.util.stream.Collectors;
 /// Presentation and Business Rules to handle payroll operations
 public class ConsolePayroll {
     private final EmployeeRepository employeeRepository;
-    private final LoginRepository loginRepository;
+    private final LoginService loginService;
     private final TimesheetRepository timesheetRepository;
     private final PayrollService payrollService;
     private final BufferedReader reader;
 
     /// Constructor to build ConsolePayroll with the default reader
     public ConsolePayroll(EmployeeRepository employeeRepository,
-                          LoginRepository loginRepository,
+                          LoginService loginService,
                           TimesheetRepository timesheetRepository,
                           PayrollService payrollService){
         this(
                 employeeRepository,
-                loginRepository,
+                loginService,
                 timesheetRepository,
                 payrollService,
                 new BufferedReader(new InputStreamReader(System.in))
@@ -38,12 +39,12 @@ public class ConsolePayroll {
     }
 
     public ConsolePayroll(EmployeeRepository employeeRepository,
-                          LoginRepository loginRepository,
+                          LoginService loginService,
                           TimesheetRepository timesheetRepository,
                           PayrollService payrollService,
                           BufferedReader reader) {
         this.employeeRepository = employeeRepository;
-        this.loginRepository = loginRepository;
+        this.loginService = loginService;
         this.timesheetRepository = timesheetRepository;
         this.payrollService = payrollService;
         this.reader = reader;
@@ -73,13 +74,13 @@ public class ConsolePayroll {
         System.out.println("[MOTORPH] Enter your password: ");
         var password = readLineOrThrow("[MOTORPH] No password entered");
 
-        var employee = this.loginRepository.getEmployeeByCredentials(username, password);
-        if (employee == null) {
+        var employee = this.loginService.login(username, password);
+        if (!employee.isSuccess()) {
             System.out.println("[MOTORPH] Invalid username or password");
             throw new RuntimeException("[MOTORPH] Invalid username or password");
         }
 
-        return employee;
+        return ((Success<Employee>)employee).value();
     }
 
     /// Asks the user to either select normal access or access other employee's payroll data
