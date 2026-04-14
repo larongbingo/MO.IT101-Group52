@@ -10,9 +10,14 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import org.motorph.employee.EmployeeDao
 import org.motorph.employee.EmployeeEntity
+import org.motorph.employee.login.LoginDao
+import org.motorph.employee.login.LoginEntity
 
 @Database(
-    entities = [EmployeeEntity::class],
+    entities = [
+        EmployeeEntity::class,
+        LoginEntity::class,
+    ],
     version = 1,
     exportSchema = false,
 )
@@ -20,6 +25,7 @@ import org.motorph.employee.EmployeeEntity
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun employeeDao(): EmployeeDao
+    abstract fun loginDao(): LoginDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT", "KotlinNoActualForExpect")
