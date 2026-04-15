@@ -24,13 +24,21 @@ public final class ManageEmployeesServiceImpl implements ManageEmployeesService 
             return Result.failure(new MotorPhException("DTO is null"));
         }
 
-        var supervisor = employeeRepository.getEmployeeByEmployeeId(newEmployee.supervisorId());
-        if (supervisor == null) {
-            return Result.failure(new MotorPhException(newEmployee.supervisorId() + " is not a valid ID"));
+        if (newEmployee.supervisorId() == null) {
+            return Result.failure(new MotorPhException("Supervisor ID is null"));
+        }
+        if (newEmployee.supervisorId().equals(newEmployee.employeeId())) {
+            return Result.failure(new MotorPhException("Supervisor cannot be the same as employee"));
+        }
+        if (!newEmployee.supervisorId().equalsIgnoreCase("N/A")) {
+            var supervisor = employeeRepository.getEmployeeByEmployeeId(newEmployee.supervisorId());
+            if (supervisor == null) {
+                return Result.failure(new MotorPhException("Supervisor ID doesn't exist"));
+            }
         }
 
         var sameEmployeeId = employeeRepository.getEmployeeByEmployeeId(newEmployee.employeeId());
-        if (sameEmployeeId == null) {
+        if (sameEmployeeId != null) {
             return Result.failure(new MotorPhException("ID is already taken"));
         }
 

@@ -7,9 +7,12 @@ import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
 import org.motorph.employees.EmploymentStatus;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 public record NewEmployeeDto(
         String employeeId,
@@ -33,6 +36,8 @@ public record NewEmployeeDto(
             return Result.failure(exception);
         }
 
+        var doubleParser = NumberFormat.getNumberInstance(Locale.US);
+
         try {
             var employee = new Employee(
                     this.employeeId(),
@@ -47,7 +52,7 @@ public record NewEmployeeDto(
                     this.pagibigMemberIdNumber(),
                     ((Success<EmploymentStatus>)employmentStatus).value(),
                     this.position(),
-                    Double.parseDouble(this.basicSalary())
+                    doubleParser.parse(this.basicSalary()).doubleValue()
             );
 
             return Result.success(employee);
@@ -56,7 +61,7 @@ public record NewEmployeeDto(
             return Result.failure(new MotorPhException("Null value found on one of the fields", e));
         } catch (DateTimeParseException e) {
             return Result.failure(new MotorPhException("Birthday can't be parsed into date", e));
-        } catch (NumberFormatException e) {
+        } catch (ParseException e) {
             return Result.failure(new MotorPhException("Basic Salary can't be parsed into double", e));
         }
     }

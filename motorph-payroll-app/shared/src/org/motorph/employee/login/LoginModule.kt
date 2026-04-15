@@ -1,6 +1,8 @@
 package org.motorph.employee.login
 
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import org.koin.plugin.module.dsl.viewModel
 import org.motorph.data.AppDatabase
 import org.motorph.employees.crypto.StringHashing
 import org.motorph.employees.login.LoginRepository
@@ -12,4 +14,5 @@ val loginModule = module {
     single<LoginRepository> { LoginRepositoryImpl(get()) }
     single<StringHashing> { BcryptStringHashing() }
     single<LoginService> { LoginServiceImpl(get(), get(), get()) }
+    viewModel<LoginViewModel>() { LoginViewModel(get()) }
 }
