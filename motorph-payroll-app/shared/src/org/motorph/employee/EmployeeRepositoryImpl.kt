@@ -57,7 +57,7 @@ class EmployeeRepositoryImpl(private val employeeDao: EmployeeDao) : EmployeeRep
 
 @Dao
 interface EmployeeDao {
-    @Query("SELECT * FROM employees WHERE employeeId = :employeeId")
+    @Query("SELECT * FROM employees WHERE employeeId = :employeeId LIMIT 1")
     suspend fun getEmployeeByEmployeeId(employeeId: String): EmployeeEntity?
 
     @Query("SELECT * FROM employees")
