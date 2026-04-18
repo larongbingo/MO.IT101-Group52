@@ -38,7 +38,7 @@ fun AppRouter() {
         }
 
         composable(AppRoute.Home.path) {
-            Screen()
+            MainShell()
         }
     }
 }
