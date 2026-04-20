@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Text
@@ -33,22 +35,15 @@ fun MainScreen() {
     val testBarParameters: List<BarParameters> = listOf(
         BarParameters(
             dataName = "Completed",
-            data = listOf(0.6, 10.6, 80.0, 50.6, 44.0, 100.6, 10.0),
+            data = listOf(45000.6, 50000.6, 45000.0, 50000.6, 44000.0, 100000.6, 100000.0),
             barColor = Color(0xFF6C3428)
-        ),
-        BarParameters(
-            dataName = "Completed",
-            data = listOf(50.0, 30.6, 77.0, 69.6, 50.0, 30.6, 80.0),
-            barColor = Color(0xFFBA704F),
-        ),
-        BarParameters(
-            dataName = "Completed",
-            data = listOf(100.0, 99.6, 60.0, 80.6, 10.0, 100.6, 55.99),
-            barColor = Color(0xFFDFA878),
         ),
     )
 
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+    ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -83,12 +78,20 @@ fun MainScreen() {
                     Text("P 123,123.12")
                 }
             }
-            Box(Modifier.fillMaxSize()) {
+            // Bar Graph meant to show relative salary per cutoff
+            Box(Modifier.height(300.dp)) {
                 BarChart(
                     chartParameters = testBarParameters,
                     gridColor = Color.DarkGray,
-                    xAxisData = listOf("2016", "2017", "2018", "2019", "2020", "2021", "2022"),
-                    isShowGrid = true,
+                    xAxisData = listOf(
+                        "January 2026 - First Cutoff",
+                        "January 2026 - Second Cutoff",
+                        "February 2026 - First Cutoff",
+                        "February 2026 - Second Cutoff",
+                        "March 2026 - First Cutoff",
+                        "March 2026 - Second Cutoff",
+                        "April 2026 - First Cutoff"
+                    ),
                     animateChart = true,
                     showGridWithSpacer = true,
                     yAxisStyle = TextStyle(
