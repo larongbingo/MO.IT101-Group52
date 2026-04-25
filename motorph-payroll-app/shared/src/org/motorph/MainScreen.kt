@@ -1,19 +1,9 @@
 package org.motorph
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Text
@@ -40,33 +30,32 @@ fun MainScreen() {
         ),
     )
 
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(color = Color(0xFF1E40AF))
-        ) {
-            Text("Next Pay Day", color = Color.White)
-            Text("4 Days Remaining", color = Color.White)
+    Column(Modifier.padding(8.dp)) {
+        Card(shape = RoundedCornerShape(8.dp), backgroundColor = Color(0xFF1E40AF)) {
+            Column(Modifier.padding(16.dp)) {
+                Text("Next Pay Day", color = Color.White)
+                Text("4 Days Remaining", color = Color.White)
 
-            Row(
-                modifier = Modifier
-                    .height(IntrinsicSize.Min)
-                    .padding(16.dp)
-                    .background(color = Color.Red)
-            ) {
-                Image(
-                    Icons.Default.CalendarMonth,
-                    "Calendar",
-                    modifier = Modifier.fillMaxHeight(),
-                    colorFilter = ColorFilter.tint(Color.White),)
-                Spacer(modifier = Modifier.width(8.dp))
-                Column {
-                    Text("Expected On", color = Color.White)
-                    Text("2024-01-01", color = Color.White)
+                Spacer(Modifier.height(8.dp))
+
+                Card(
+                    modifier = Modifier
+                        .height(IntrinsicSize.Min),
+                    shape = RoundedCornerShape(8.dp),
+                    backgroundColor = Color(0xFF0EA5E9)
+                ) {
+                    Row(Modifier.padding(8.dp)) {
+                        Image(
+                            Icons.Default.CalendarMonth,
+                            "Calendar",
+                            modifier = Modifier.fillMaxHeight(),
+                            colorFilter = ColorFilter.tint(Color.White),)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text("Expected On", color = Color.White)
+                            Text("2024-01-01", color = Color.White)
+                        }
+                    }
                 }
             }
         }
@@ -78,8 +67,7 @@ fun MainScreen() {
                     Text("P 123,123.12")
                 }
             }
-            // Bar Graph meant to show relative salary per cutoff
-            Box(Modifier.height(300.dp)) {
+            Box(Modifier.height(300.dp).padding(8.dp)) {
                 BarChart(
                     chartParameters = testBarParameters,
                     gridColor = Color.DarkGray,
@@ -103,7 +91,6 @@ fun MainScreen() {
                         color = Color.DarkGray,
                         fontWeight = FontWeight.W400
                     ),
-                    yAxisRange = 15,
                     barWidth = 20.dp
                 )
             }
