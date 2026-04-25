@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import org.koin.compose.viewmodel.koinViewModel
 import org.motorph.employee.login.LoginScreen
 import org.motorph.employee.login.LoginViewModel
+import org.motorph.ui.MainShell
 
 sealed class AppRoute(val path: String) {
     data object Login : AppRoute("/login")
