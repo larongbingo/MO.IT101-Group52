@@ -57,10 +57,10 @@ class EmployeeRepositoryImpl(private val employeeDao: EmployeeDao) : EmployeeRep
 
 @Dao
 interface EmployeeDao {
-    @Query("SELECT * FROM employees WHERE employeeId = :employeeId LIMIT 1")
+    @Query("SELECT * FROM employees WHERE employeeId = :employeeId AND deletedAt IS NULL LIMIT 1")
     suspend fun getEmployeeByEmployeeId(employeeId: String): EmployeeEntity?
 
-    @Query("SELECT * FROM employees")
+    @Query("SELECT * FROM employees WHERE deletedAt IS NULL")
     suspend fun getAllEmployees(): List<EmployeeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
