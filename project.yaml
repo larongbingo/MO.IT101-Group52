@@ -1,6 +1,3 @@
 modules:
-  - motorph-payroll-app/android-app
-  - motorph-payroll-app/jvm-app
-  - motorph-payroll-app/shared
-  - motorph-payroll-console
   - motorph-payroll-core
+  - motorph-payroll-swing-ui

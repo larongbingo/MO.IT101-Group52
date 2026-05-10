@@ -1,0 +1,13 @@
+product:
+  type: jvm/app
+
+dependencies:
+  - ../motorph-payroll-core
+  - de.siegmar:fastcsv:4.1.1
+
+settings:
+  junit: junit-5
+  jvm:
+    jdk:
+      version: 25
+      selectionMode: alwaysProvision

@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/// Parses employee and attendance data from CSV streams
+/**
+ * Parses employee and attendance data from CSV streams
+ * <p>
+ * Remark: Pulled from ComProg1 Project
+ * https://github.com/larongbingo/MO.IT101-Group55/tree/master
+ */
 public class LoadData {
     private final InputStream employeeStream;
     private final InputStream attendanceStream;
@@ -29,7 +34,6 @@ public class LoadData {
         this.attendanceStream = attendanceStream;
     }
 
-    /// Parses the employee and login data
     public EmployeeLogin loadEmployees() throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
         List<Login> logins = new ArrayList<>();
@@ -107,4 +111,3 @@ public class LoadData {
         return timesheets;
     }
 }
-
