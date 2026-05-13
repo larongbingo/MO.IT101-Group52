@@ -29,6 +29,8 @@ public class Shell extends JPanel {
     public static void navigate(String panelName) {
         if (Global != null) {
             Global.showPanel(panelName);
+        } else {
+            throw new NullPointerException("Global Shell is null");
         }
     }
 }
