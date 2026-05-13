@@ -1,4 +1,4 @@
-package org.motorph;
+package org.motorph.data;
 
 import de.siegmar.fastcsv.reader.CsvReader;
 import org.motorph.core.MotorPhException;
