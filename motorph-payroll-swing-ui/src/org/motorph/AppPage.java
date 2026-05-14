@@ -30,8 +30,7 @@ public class AppPage extends JPanel {
 
         appPanel.setLayout(new BoxLayout(appPanel, BoxLayout.Y_AXIS));
         // FIXME: on subsequent nav back to App page, the welcome message doubles
-        appPanel.add(new JLabel("Welcome " + employee.FirstName + " " + employee.LastName));
-        appPanel.add(new JLabel("Select an option from the menu:"));
+        appPanel.add(new JLabel("Welcome " + employee.FirstName + " " + employee.LastName + " - " + employee.Position));
         appPanel.add(viewProfileButton);
         appPanel.add(viewCurrentEmployeesPayrollButton);
         if (employee.IsPayrollStaff())
@@ -39,8 +38,6 @@ public class AppPage extends JPanel {
         appPanel.add(logoutButton);
         add(appPanel);
 
-        appPanel.revalidate();
-        appPanel.repaint();
         revalidate();
         repaint();
     }

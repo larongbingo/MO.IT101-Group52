@@ -28,8 +28,6 @@ public class ViewEmployeeInfoPage extends JPanel {
         viewEmployeeInfoPanel.add(backButton, BorderLayout.SOUTH);
         add(viewEmployeeInfoPanel);
 
-        viewEmployeeInfoPanel.revalidate();
-        viewEmployeeInfoPanel.repaint();
         revalidate();
         repaint();
     }
