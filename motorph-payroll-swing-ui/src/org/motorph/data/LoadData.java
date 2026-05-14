@@ -6,9 +6,10 @@ import org.motorph.core.MotorPhException;
 import org.motorph.core.results.Failure;
 import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
+import org.motorph.employees.EmployeeRepository;
 import org.motorph.employees.dto.NewEmployeeDto;
 import org.motorph.employees.login.Login;
-import org.motorph.payroll.EmployeeLogin;
+import org.motorph.employees.login.LoginRepository;
 import org.motorph.timesheet.Timesheet;
 
 import java.io.BufferedReader;
@@ -27,6 +28,13 @@ import java.util.stream.Collectors;
  * https://github.com/larongbingo/MO.IT101-Group55/tree/master
  */
 public class LoadData {
+    private final LoginRepository loginRepo;
+    private final EmployeeRepository employeeRepo;
+    public LoadData(LoginRepository loginRepo, EmployeeRepository employeeRepo) {
+        this.loginRepo = loginRepo;
+        this.employeeRepo = employeeRepo;
+    }
+
     private List<Employee> loadEmployees(InputStream employeeStream) throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
 
@@ -134,5 +142,11 @@ public class LoadData {
         var timesheets = loadTimesheets(attendanceStream);
 
         return new MotorPhData(employees, logins, timesheets);
+    }
+
+    public void initReposWithData() {
+        var motorPhData = loadData();
+        motorPhData.logins().stream().forEach(login -> loginRepo.addLogin(login));
+        motorPhData.employees().stream().forEach(employee -> employeeRepo.addEmployee(employee));
     }
 }

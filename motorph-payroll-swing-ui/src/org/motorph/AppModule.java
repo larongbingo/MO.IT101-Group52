@@ -7,6 +7,7 @@ import org.motorph.auth.ListLoginRepository;
 import org.motorph.auth.LoginPage;
 import org.motorph.auth.LoginViewModel;
 import org.motorph.auth.NoopStringHashing;
+import org.motorph.data.LoadData;
 import org.motorph.employees.*;
 import org.motorph.employees.crypto.StringHashing;
 import org.motorph.employees.login.LoginRepository;
@@ -21,6 +22,12 @@ public class AppModule extends AbstractModule {
         bind(StringHashing.class).to(NoopStringHashing.class).in(Singleton.class);
         bind(AppViewModel.class).in(Singleton.class);
         bind(ViewEmployeeViewModel.class).in(Singleton.class);
+    }
+
+    @Provides
+    @Singleton
+    public LoadData provideLoadData( LoginRepository loginRepository, EmployeeRepository employeeRepository) {
+        return new LoadData(loginRepository, employeeRepository);
     }
 
     @Provides

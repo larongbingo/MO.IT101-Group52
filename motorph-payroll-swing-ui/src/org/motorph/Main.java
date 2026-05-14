@@ -3,10 +3,7 @@ package org.motorph;
 import com.google.inject.Guice;
 import org.motorph.auth.LoginPage;
 import org.motorph.data.LoadData;
-import org.motorph.data.MotorPhData;
-import org.motorph.employees.EmployeeRepository;
 import org.motorph.employees.ViewEmployeeInfoPage;
-import org.motorph.employees.login.LoginRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,12 +12,7 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
         var injector = Guice.createInjector(new AppModule());
-
-        var loginRepo = injector.getInstance(LoginRepository.class);
-        var employeeRepo = injector.getInstance(EmployeeRepository.class);
-        var motorPhData = new LoadData().loadData();
-        motorPhData.logins().stream().forEach(login -> loginRepo.addLogin(login));
-        motorPhData.employees().stream().forEach(employee -> employeeRepo.addEmployee(employee));
+        injector.getInstance(LoadData.class).initReposWithData();
 
         var map = new HashMap<String, JPanel>();
         map.put(Routes.APP, injector.getInstance(AppPage.class));
