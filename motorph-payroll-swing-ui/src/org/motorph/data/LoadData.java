@@ -26,17 +26,8 @@ import java.util.stream.Collectors;
  * https://github.com/larongbingo/MO.IT101-Group55/tree/master
  */
 public class LoadData {
-    private final InputStream employeeStream;
-    private final InputStream attendanceStream;
-
-    public LoadData(InputStream employeeStream, InputStream attendanceStream) {
-        this.employeeStream = employeeStream;
-        this.attendanceStream = attendanceStream;
-    }
-
-    public EmployeeLogin loadEmployees() throws RuntimeException {
+    public List<Employee> loadEmployees(InputStream employeeStream) throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
-        List<Login> logins = new ArrayList<>();
 
         var employeeReader = new BufferedReader(new InputStreamReader(employeeStream));
         var employeeStringData = employeeReader.lines().collect(Collectors.joining("\n"));
@@ -71,13 +62,6 @@ public class LoadData {
 
                 var employee = ((Success<Employee>)employeeResult).value();
                 employees.add(employee);
-
-                var login = new Login(
-                        x.getField("Employee #"),
-                        x.getField("Username"),
-                        x.getField("Password")
-                );
-                logins.add(login);
             });
         }
         catch (Exception e) {
@@ -86,11 +70,22 @@ public class LoadData {
 
         // TODO: rebuild heirarchy from Immediate Supervisor column (not needed for now)
 
-        return new EmployeeLogin(employees, logins);
+        return employees;
+    }
+
+    public List<Login> loadLogins(InputStream loginStream) throws RuntimeException {
+        var logins = new ArrayList<Login>();
+
+        var employeeReader = new BufferedReader(new InputStreamReader(loginStream));
+        var employeeStringData = employeeReader.lines().collect(Collectors.joining("\n"));
+
+
+
+        return logins;
     }
 
     /// Parses the attendance data
-    public List<Timesheet> loadTimesheets() throws RuntimeException {
+    public List<Timesheet> loadTimesheets(InputStream attendanceStream) throws RuntimeException {
         List<Timesheet> timesheets = new ArrayList<>();
 
         var attendanceReader = new BufferedReader(new InputStreamReader(attendanceStream));

@@ -1,15 +1,46 @@
 package org.motorph;
 
+import org.motorph.listeners.AncestorListenerHandler;
+
 import javax.swing.*;
 
 public class AppPage extends JPanel {
     private final JPanel appPanel;
-    public AppPage() {
+    private final JButton viewProfileButton;
+    private final JButton viewCurrentEmployeesPayrollButton;
+    private final JButton viewOtherEmployeesPayrollButton;
+    private final JButton logoutButton;
+    private final AppViewModel viewModel;
+
+    public AppPage(AppViewModel viewModel) {
         this.appPanel = new JPanel();
+        this.viewProfileButton = new JButton("View Profile");
+        this.viewCurrentEmployeesPayrollButton = new JButton("View Your Payroll");
+        this.viewOtherEmployeesPayrollButton = new JButton("View Other Employees Payroll");
+        this.logoutButton = new JButton("Logout");
+        this.viewModel = viewModel;
+
+        viewProfileButton.addActionListener(e -> viewModel.GoToEmployeeDetails());
+
+        addAncestorListener(new AncestorListenerHandler(this::addLayout));
+    }
+
+    private void addLayout() {
+        var employee = viewModel.getLoggedInEmployee();
 
         appPanel.setLayout(new BoxLayout(appPanel, BoxLayout.Y_AXIS));
-        appPanel.add(new JLabel("Welcome to Motorph Payroll"));
-
+        appPanel.add(new JLabel("Welcome " + employee.FirstName + " " + employee.LastName));
+        appPanel.add(new JLabel("Select an option from the menu:"));
+        appPanel.add(viewProfileButton);
+        appPanel.add(viewCurrentEmployeesPayrollButton);
+        if (employee.IsPayrollStaff())
+            appPanel.add(viewOtherEmployeesPayrollButton);
+        appPanel.add(logoutButton);
         add(appPanel);
+
+        appPanel.revalidate();
+        appPanel.repaint();
+        revalidate();
+        repaint();
     }
 }
