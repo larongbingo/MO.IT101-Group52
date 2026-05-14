@@ -1,4 +1,4 @@
-package org.motorph;
+package org.motorph.auth;
 
 import org.motorph.listeners.TextFieldHandler;
 

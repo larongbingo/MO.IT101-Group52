@@ -1,7 +1,6 @@
-package org.motorph;
+package org.motorph.employees;
 
 import org.motorph.auth.CurrentEmployeeLoggedIn;
-import org.motorph.employees.Employee;
 
 public class ViewEmployeeViewModel {
     public Employee getEmployee() {

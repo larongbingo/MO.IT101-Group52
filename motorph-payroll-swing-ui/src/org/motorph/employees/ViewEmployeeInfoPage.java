@@ -1,7 +1,6 @@
-package org.motorph;
+package org.motorph.employees;
 
 import org.motorph.controls.EmployeeInfoPanel;
-import org.motorph.employees.Employee;
 import org.motorph.listeners.AncestorListenerHandler;
 
 import javax.swing.*;
