@@ -1,6 +1,7 @@
 package org.motorph.data;
 
 import de.siegmar.fastcsv.reader.CsvReader;
+import org.motorph.Main;
 import org.motorph.core.MotorPhException;
 import org.motorph.core.results.Failure;
 import org.motorph.core.results.Success;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  * https://github.com/larongbingo/MO.IT101-Group55/tree/master
  */
 public class LoadData {
-    public List<Employee> loadEmployees(InputStream employeeStream) throws RuntimeException {
+    private List<Employee> loadEmployees(InputStream employeeStream) throws RuntimeException {
         List<Employee> employees = new ArrayList<>();
 
         var employeeReader = new BufferedReader(new InputStreamReader(employeeStream));
@@ -73,19 +74,27 @@ public class LoadData {
         return employees;
     }
 
-    public List<Login> loadLogins(InputStream loginStream) throws RuntimeException {
+    private List<Login> loadLogins(InputStream loginStream) throws RuntimeException {
         var logins = new ArrayList<Login>();
 
-        var employeeReader = new BufferedReader(new InputStreamReader(loginStream));
-        var employeeStringData = employeeReader.lines().collect(Collectors.joining("\n"));
+        var loginReader = new BufferedReader(new InputStreamReader(loginStream));
+        var loginStringData = loginReader.lines().collect(Collectors.joining("\n"));
 
+        var loginCsv = CsvReader.builder().ofNamedCsvRecord(loginStringData);
 
+        loginCsv.stream().forEach(x -> {
+            var login = new Login(
+                    x.getField("Employee #"),
+                    x.getField("Username"),
+                    x.getField("Password")
+            );
+            logins.add(login);
+        });
 
         return logins;
     }
 
-    /// Parses the attendance data
-    public List<Timesheet> loadTimesheets(InputStream attendanceStream) throws RuntimeException {
+    private List<Timesheet> loadTimesheets(InputStream attendanceStream) throws RuntimeException {
         List<Timesheet> timesheets = new ArrayList<>();
 
         var attendanceReader = new BufferedReader(new InputStreamReader(attendanceStream));
@@ -104,5 +113,26 @@ public class LoadData {
         });
 
         return timesheets;
+    }
+
+    public MotorPhData loadData() {
+        var employeeStream = Main.class.getClassLoader().getResourceAsStream("employees.csv");
+        if (employeeStream == null) {
+            throw new RuntimeException("[MotorPH] Could not find employees.csv");
+        }
+        var attendanceStream = Main.class.getClassLoader().getResourceAsStream("attendance.csv");
+        if (attendanceStream == null) {
+            throw new RuntimeException("[MotorPH] Could not find attendance.csv");
+        }
+        var loginStream = Main.class.getClassLoader().getResourceAsStream("logins.csv");
+        if (loginStream == null) {
+            throw new RuntimeException("[MotorPH] Could not find logins.csv");
+        }
+
+        var employees = loadEmployees(employeeStream);
+        var logins = loadLogins(loginStream);
+        var timesheets = loadTimesheets(attendanceStream);
+
+        return new MotorPhData(employees, logins, timesheets);
     }
 }
