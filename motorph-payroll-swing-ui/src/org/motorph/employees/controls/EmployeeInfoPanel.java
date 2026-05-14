@@ -1,4 +1,4 @@
-package org.motorph.controls;
+package org.motorph.employees.controls;
 
 import org.motorph.employees.Employee;
 import org.motorph.listeners.AncestorListenerHandler;
