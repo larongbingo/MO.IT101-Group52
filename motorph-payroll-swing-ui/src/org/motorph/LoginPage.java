@@ -1,14 +1,12 @@
 package org.motorph;
 
+import org.motorph.listeners.TextFieldHandler;
+
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 
 public class LoginPage extends JPanel {
+    private final LoginViewModel viewModel;
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JButton loginButton;
@@ -19,7 +17,9 @@ public class LoginPage extends JPanel {
         this.passwordField = new JPasswordField();
         this.loginButton = new JButton("Login");
         this.loginPanel = new JPanel();
+        this.viewModel = viewModel;
 
+        // Layout
         loginPanel.setLayout(new GridLayout(0, 1));
         loginPanel.setPreferredSize(new Dimension(300, 200));
         loginPanel.add(new JLabel("Username: "));
@@ -31,6 +31,7 @@ public class LoginPage extends JPanel {
         loginPanel.add(loginButton);
         add(loginPanel);
 
+        // Bindings
         usernameField.getDocument().addDocumentListener(new TextFieldHandler(e -> {
             viewModel.username = e;
         }));
@@ -41,36 +42,7 @@ public class LoginPage extends JPanel {
 
         loginButton.addActionListener(e -> {
             viewModel.onLogin();
+            // TODO: add a way to show changes that came from ViewModel
         });
-    }
-}
-
-class TextFieldHandler implements DocumentListener {
-    private final Consumer<String> action;
-    public TextFieldHandler(Consumer<String> action) {
-        this.action = action;
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        try {
-            action.accept(e.getDocument().getText(0, e.getDocument().getLength()));
-        } catch (BadLocationException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        try {
-            action.accept(e.getDocument().getText(0, e.getDocument().getLength()));
-        } catch (BadLocationException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-
     }
 }
