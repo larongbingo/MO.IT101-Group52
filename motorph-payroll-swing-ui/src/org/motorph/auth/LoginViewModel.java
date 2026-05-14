@@ -2,42 +2,32 @@ package org.motorph.auth;
 
 import org.motorph.Routes;
 import org.motorph.Shell;
+import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
-import org.motorph.employees.EmploymentStatus;
-
-import java.time.LocalDate;
+import org.motorph.employees.login.LoginService;
 
 public class LoginViewModel {
     public String username;
     public String password;
+    private final LoginService loginService;
 
-    public LoginViewModel() {
-
+    public LoginViewModel(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     public void onLogin() {
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
             // TODO: Show error message
             return;
         }
 
-        // Test data
-        CurrentEmployeeLoggedIn.employee = new Employee(
-                "123",
-                "Doe",
-                "John",
-                LocalDate.now(),
-                "Random",
-                "+09",
-                "123-123-123",
-                "123-123-123",
-                "123-123-12300",
-                "123-123-123",
-                EmploymentStatus.Regular,
-                "Payroll Team Lead",
-                9000
-        );
+        var result = loginService.login(username, password);
 
-        Shell.navigate(Routes.APP);
+        if (result.isSuccess()) {
+            CurrentEmployeeLoggedIn.employee = ((Success<Employee>)result).value();
+            Shell.navigate(Routes.APP);
+        } else {
+            // TODO: Show error message
+        }
     }
 }
