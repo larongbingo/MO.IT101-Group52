@@ -14,6 +14,6 @@ public class LoginViewModel {
             return;
         }
 
-        Shell.navigate("app");
+        Shell.navigate(Routes.APP);
     }
 }

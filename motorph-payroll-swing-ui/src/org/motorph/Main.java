@@ -9,8 +9,8 @@ public class Main {
         var map = new HashMap<String, JPanel>();
         var loginViewModel = new LoginViewModel();
 
-        map.put("app", new AppPage());
-        map.put("login", new LoginPage(loginViewModel));
+        map.put(Routes.APP, new AppPage());
+        map.put(Routes.LOGIN, new LoginPage(loginViewModel));
 
         var shellPanel = new Shell(map);
         Shell.Global = shellPanel;
