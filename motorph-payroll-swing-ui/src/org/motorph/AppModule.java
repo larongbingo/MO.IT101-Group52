@@ -13,6 +13,8 @@ import org.motorph.employees.crypto.StringHashing;
 import org.motorph.employees.login.LoginRepository;
 import org.motorph.employees.login.LoginService;
 import org.motorph.employees.login.LoginServiceImpl;
+import org.motorph.timesheet.ListTimesheetRepository;
+import org.motorph.timesheet.TimesheetRepository;
 
 public class AppModule extends AbstractModule {
     @Override
@@ -22,12 +24,15 @@ public class AppModule extends AbstractModule {
         bind(StringHashing.class).to(NoopStringHashing.class).in(Singleton.class);
         bind(AppViewModel.class).in(Singleton.class);
         bind(ViewEmployeeViewModel.class).in(Singleton.class);
+        bind(TimesheetRepository.class).to(ListTimesheetRepository.class).in(Singleton.class);
     }
 
     @Provides
     @Singleton
-    public LoadData provideLoadData( LoginRepository loginRepository, EmployeeRepository employeeRepository) {
-        return new LoadData(loginRepository, employeeRepository);
+    public LoadData provideLoadData(
+            LoginRepository loginRepository, EmployeeRepository employeeRepository,
+            TimesheetRepository timesheetRepository) {
+        return new LoadData(loginRepository, employeeRepository, timesheetRepository);
     }
 
     @Provides

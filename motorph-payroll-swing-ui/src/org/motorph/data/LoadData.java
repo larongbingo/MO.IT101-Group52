@@ -11,6 +11,7 @@ import org.motorph.employees.dto.NewEmployeeDto;
 import org.motorph.employees.login.Login;
 import org.motorph.employees.login.LoginRepository;
 import org.motorph.timesheet.Timesheet;
+import org.motorph.timesheet.TimesheetRepository;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -30,9 +31,11 @@ import java.util.stream.Collectors;
 public class LoadData {
     private final LoginRepository loginRepo;
     private final EmployeeRepository employeeRepo;
-    public LoadData(LoginRepository loginRepo, EmployeeRepository employeeRepo) {
+    private final TimesheetRepository timesheetRepo;
+    public LoadData(LoginRepository loginRepo, EmployeeRepository employeeRepo, TimesheetRepository timesheetRepo) {
         this.loginRepo = loginRepo;
         this.employeeRepo = employeeRepo;
+        this.timesheetRepo = timesheetRepo;
     }
 
     private List<Employee> loadEmployees(InputStream employeeStream) throws RuntimeException {
@@ -148,5 +151,6 @@ public class LoadData {
         var motorPhData = loadData();
         motorPhData.logins().stream().forEach(login -> loginRepo.addLogin(login));
         motorPhData.employees().stream().forEach(employee -> employeeRepo.addEmployee(employee));
+        motorPhData.timesheets().stream().forEach(timesheet -> timesheetRepo.addTimesheet(timesheet));
     }
 }
