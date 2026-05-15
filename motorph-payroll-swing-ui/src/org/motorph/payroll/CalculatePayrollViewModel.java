@@ -16,6 +16,7 @@ public class CalculatePayrollViewModel {
 
     public Payroll calculatePayroll() {
         var employee = CurrentEmployeeLoggedIn.employee;
+        // TODO: handle multiple timesheets/months, for testing purposes this only handles the first month
         var timesheet = timesheetRepository.getAllTimesheetsByEmployeeIdAndMonth(
                 employee.EmployeeId,
                 SelectedTimesheet.selectedTimesheetMonth.getFirst()
