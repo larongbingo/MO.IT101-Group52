@@ -22,6 +22,8 @@ public class ViewEmployeeInfoPage extends JPanel {
     }
 
     private void addLayout() {
+        viewEmployeeInfoPanel.removeAll();
+
         Employee employee = viewModel.getEmployee();
         viewEmployeeInfoPanel.setLayout(new BorderLayout());
         viewEmployeeInfoPanel.add(new EmployeeInfoPanel(employee));

@@ -35,6 +35,8 @@ public class SelectTimesheetPage extends JPanel {
 
         // TODO: add handling for cases when there are no timesheets
 
+        selectTimesheetPanel.removeAll();
+
         selectTimesheetPanel.setLayout(new BoxLayout(selectTimesheetPanel, BoxLayout.Y_AXIS));
         selectTimesheetPanel.add(new JLabel("Select Timesheet: "));
         selectTimesheetPanel.add(timesheetDropdown);

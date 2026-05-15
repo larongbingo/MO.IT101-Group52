@@ -30,8 +30,9 @@ public class AppPage extends JPanel {
     private void addLayout() {
         var employee = viewModel.getLoggedInEmployee();
 
+        appPanel.removeAll();
+
         appPanel.setLayout(new BoxLayout(appPanel, BoxLayout.Y_AXIS));
-        // FIXME: on subsequent nav back to App page, the welcome message doubles
         appPanel.add(new JLabel("Welcome " + employee.FirstName + " " + employee.LastName + " - " + employee.Position));
         appPanel.add(viewProfileButton);
         appPanel.add(viewCurrentEmployeesPayrollButton);
