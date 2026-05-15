@@ -22,6 +22,8 @@ public class AppPage extends JPanel {
 
         viewProfileButton.addActionListener(e -> viewModel.GoToEmployeeDetails());
 
+        viewCurrentEmployeesPayrollButton.addActionListener(e -> viewModel.GoToPayroll());
+
         addAncestorListener(new AncestorListenerHandler(this::addLayout));
     }
 

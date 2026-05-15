@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import org.motorph.auth.LoginPage;
 import org.motorph.data.LoadData;
 import org.motorph.employees.ViewEmployeeInfoPage;
+import org.motorph.payroll.CalculatePayrollPage;
+import org.motorph.payroll.SelectTimesheetPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,8 @@ public class Main {
         map.put(Routes.APP, injector.getInstance(AppPage.class));
         map.put(Routes.LOGIN, injector.getInstance(LoginPage.class));
         map.put(Routes.VIEW_EMPLOYEE, injector.getInstance(ViewEmployeeInfoPage.class));
+        map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
+        map.put(Routes.VIEW_PAYROLL__CALCULATOR, injector.getInstance(CalculatePayrollPage.class));
 
         var shellPanel = new Shell(map);
         Shell.Global = shellPanel;

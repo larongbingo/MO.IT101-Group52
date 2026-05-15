@@ -13,8 +13,7 @@ import org.motorph.employees.crypto.StringHashing;
 import org.motorph.employees.login.LoginRepository;
 import org.motorph.employees.login.LoginService;
 import org.motorph.employees.login.LoginServiceImpl;
-import org.motorph.payroll.SelectTimesheetPage;
-import org.motorph.payroll.SelectTimesheetViewModel;
+import org.motorph.payroll.*;
 import org.motorph.timesheet.ListTimesheetRepository;
 import org.motorph.timesheet.TimesheetRepository;
 
@@ -27,6 +26,7 @@ public class AppModule extends AbstractModule {
         bind(AppViewModel.class).in(Singleton.class);
         bind(ViewEmployeeViewModel.class).in(Singleton.class);
         bind(TimesheetRepository.class).to(ListTimesheetRepository.class).in(Singleton.class);
+        bind(PayrollService.class).in(Singleton.class);
     }
 
     @Provides
@@ -58,6 +58,16 @@ public class AppModule extends AbstractModule {
         return new LoginViewModel(loginService);
     }
 
+    @Provides
+    public SelectTimesheetViewModel provideSelectTimesheetViewModel(TimesheetRepository timesheetRepository) {
+        return new SelectTimesheetViewModel(timesheetRepository);
+    }
+
+    @Provides
+    public CalculatePayrollViewModel provideCalculatePayrollViewModel(
+            PayrollService payrollService, TimesheetRepository timesheetRepository) {
+        return new CalculatePayrollViewModel(payrollService, timesheetRepository);
+    }
 
     @Provides
     public LoginPage provideLoginPage(LoginViewModel viewModel) {
@@ -74,9 +84,13 @@ public class AppModule extends AbstractModule {
         return new ViewEmployeeInfoPage(viewModel);
     }
 
-//    @Provides
-//    @Singleton
-//    public AppViewModel provideAppViewModel(LoginService loginService, ManageEmployeesService manageEmployeesService) {
-//        return new AppViewModel();
-//    }
+    @Provides
+    public SelectTimesheetPage provideSelectTimesheetPage(SelectTimesheetViewModel viewModel) {
+        return new SelectTimesheetPage(viewModel);
+    }
+
+    @Provides
+    public CalculatePayrollPage provideCalculatePayrollPage(CalculatePayrollViewModel viewModel) {
+        return new CalculatePayrollPage(viewModel);
+    }
 }
