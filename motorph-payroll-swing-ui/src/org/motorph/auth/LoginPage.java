@@ -1,5 +1,7 @@
 package org.motorph.auth;
 
+import org.motorph.core.results.Failure;
+import org.motorph.employees.Employee;
 import org.motorph.listeners.TextFieldHandler;
 
 import javax.swing.*;
@@ -9,6 +11,7 @@ public class LoginPage extends JPanel {
     private final LoginViewModel viewModel;
     private final JTextField usernameField;
     private final JPasswordField passwordField;
+    private final JLabel errorMessageLabel;
     private final JButton loginButton;
     private final JPanel loginPanel;
 
@@ -17,6 +20,7 @@ public class LoginPage extends JPanel {
         this.passwordField = new JPasswordField();
         this.loginButton = new JButton("Login");
         this.loginPanel = new JPanel();
+        this.errorMessageLabel = new JLabel();
         this.viewModel = viewModel;
 
         // Layout
@@ -27,6 +31,7 @@ public class LoginPage extends JPanel {
         loginPanel.add(new JLabel()); // Spacer
         loginPanel.add(new JLabel("Password: "));
         loginPanel.add(passwordField);
+        loginPanel.add(errorMessageLabel);
         loginPanel.add(new JLabel()); // Spacer
         loginPanel.add(loginButton);
         add(loginPanel);
@@ -41,8 +46,10 @@ public class LoginPage extends JPanel {
         }));
 
         loginButton.addActionListener(e -> {
-            viewModel.onLogin();
-            // TODO: add a way to show changes that came from ViewModel
+            var result = viewModel.onLogin();
+            if (result instanceof Failure<Employee> failure) {
+                errorMessageLabel.setText(failure.exception().getMessage());
+            }
         });
     }
 }

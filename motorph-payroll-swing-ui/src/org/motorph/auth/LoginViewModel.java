@@ -2,6 +2,8 @@ package org.motorph.auth;
 
 import org.motorph.Routes;
 import org.motorph.Shell;
+import org.motorph.core.MotorPhException;
+import org.motorph.core.results.Result;
 import org.motorph.core.results.Success;
 import org.motorph.employees.Employee;
 import org.motorph.employees.login.LoginService;
@@ -15,10 +17,13 @@ public class LoginViewModel {
         this.loginService = loginService;
     }
 
-    public void onLogin() {
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
-            // TODO: Show error message
-            return;
+    public Result<Employee> onLogin() {
+        if (username == null || username.isBlank()) {
+            return Result.failure(new MotorPhException("Username cannot be empty"));
+        }
+
+        if (password == null || password.isBlank()) {
+            return Result.failure(new MotorPhException("Password cannot be empty"));
         }
 
         var result = loginService.login(username, password);
@@ -26,8 +31,9 @@ public class LoginViewModel {
         if (result.isSuccess()) {
             CurrentEmployeeLoggedIn.employee = ((Success<Employee>)result).value();
             Shell.navigate(Routes.APP);
+            return Result.success(CurrentEmployeeLoggedIn.employee);
         } else {
-            // TODO: Show error message
+            return result;
         }
     }
 }
