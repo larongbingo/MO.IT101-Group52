@@ -33,6 +33,8 @@ public class SelectTimesheetPage extends JPanel {
         // Select first item
         viewModel.selectedTimesheetMonth = timesheets[0];
 
+        // TODO: add handling for cases when there are no timesheets
+
         selectTimesheetPanel.setLayout(new BoxLayout(selectTimesheetPanel, BoxLayout.Y_AXIS));
         selectTimesheetPanel.add(new JLabel("Select Timesheet: "));
         selectTimesheetPanel.add(timesheetDropdown);
