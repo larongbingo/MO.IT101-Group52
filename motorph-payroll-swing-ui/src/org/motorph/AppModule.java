@@ -13,6 +13,8 @@ import org.motorph.employees.crypto.StringHashing;
 import org.motorph.employees.login.LoginRepository;
 import org.motorph.employees.login.LoginService;
 import org.motorph.employees.login.LoginServiceImpl;
+import org.motorph.payroll.SelectTimesheetPage;
+import org.motorph.payroll.SelectTimesheetViewModel;
 import org.motorph.timesheet.ListTimesheetRepository;
 import org.motorph.timesheet.TimesheetRepository;
 
@@ -58,19 +60,16 @@ public class AppModule extends AbstractModule {
 
 
     @Provides
-    @Singleton
     public LoginPage provideLoginPage(LoginViewModel viewModel) {
         return new LoginPage(viewModel);
     }
 
     @Provides
-    @Singleton
     public AppPage provideAppPage(AppViewModel viewModel) {
         return new AppPage(viewModel);
     }
 
     @Provides
-    @Singleton
     public ViewEmployeeInfoPage provideViewEmployeeInfoPage(ViewEmployeeViewModel viewModel) {
         return new ViewEmployeeInfoPage(viewModel);
     }
