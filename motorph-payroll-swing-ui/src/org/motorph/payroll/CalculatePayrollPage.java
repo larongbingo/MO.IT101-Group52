@@ -21,6 +21,8 @@ public class CalculatePayrollPage extends JPanel {
     private void addLayout() {
         calculatePayrollPanel.removeAll();
 
+        // TODO: add scrollbar for cases with multiple payrolls
+
         var payrolls = viewModel.calculatePayroll();
         calculatePayrollPanel.setLayout(new BoxLayout(calculatePayrollPanel, BoxLayout.Y_AXIS));
         calculatePayrollPanel.add(new PayrollInfoPanel(payrolls));
