@@ -70,6 +70,12 @@ public class AppModule extends AbstractModule {
     }
 
     @Provides
+    public ManageEmployeeListViewModel provideManageEmployeeListViewModel(
+            EmployeeRepository employeeRepository, ManageEmployeesService manageEmployeesService) {
+        return new ManageEmployeeListViewModel(employeeRepository, manageEmployeesService);
+    }
+
+    @Provides
     public LoginPage provideLoginPage(LoginViewModel viewModel) {
         return new LoginPage(viewModel);
     }
@@ -92,5 +98,10 @@ public class AppModule extends AbstractModule {
     @Provides
     public CalculatePayrollPage provideCalculatePayrollPage(CalculatePayrollViewModel viewModel) {
         return new CalculatePayrollPage(viewModel);
+    }
+
+    @Provides
+    public ManageEmployeeListPage provideManageEmployeeListPage(ManageEmployeeListViewModel viewModel) {
+        return new ManageEmployeeListPage(viewModel);
     }
 }

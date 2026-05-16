@@ -20,6 +20,8 @@ public class AppPage extends JPanel {
         this.logoutButton = new JButton("Logout");
         this.viewModel = viewModel;
 
+        viewOtherEmployeesPayrollButton.addActionListener(e -> viewModel.GoToManageEmployees());
+
         viewProfileButton.addActionListener(e -> viewModel.GoToEmployeeDetails());
 
         viewCurrentEmployeesPayrollButton.addActionListener(e -> viewModel.GoToPayroll());

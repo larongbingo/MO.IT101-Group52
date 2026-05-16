@@ -15,4 +15,8 @@ public class AppViewModel {
     public void GoToPayroll() {
         Shell.navigate(Routes.VIEW_PAYROLL);
     }
+
+    public void GoToManageEmployees() {
+        Shell.navigate(Routes.MANAGE_EMPLOYEES);
+    }
 }

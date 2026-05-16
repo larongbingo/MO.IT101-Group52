@@ -3,6 +3,7 @@ package org.motorph;
 import com.google.inject.Guice;
 import org.motorph.auth.LoginPage;
 import org.motorph.data.LoadData;
+import org.motorph.employees.ManageEmployeeListPage;
 import org.motorph.employees.ViewEmployeeInfoPage;
 import org.motorph.payroll.CalculatePayrollPage;
 import org.motorph.payroll.SelectTimesheetPage;
@@ -22,6 +23,7 @@ public class Main {
         map.put(Routes.VIEW_EMPLOYEE, injector.getInstance(ViewEmployeeInfoPage.class));
         map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
         map.put(Routes.VIEW_PAYROLL__CALCULATOR, injector.getInstance(CalculatePayrollPage.class));
+        map.put(Routes.MANAGE_EMPLOYEES, injector.getInstance(ManageEmployeeListPage.class));
 
         var shellPanel = new Shell(map);
         Shell.Global = shellPanel;

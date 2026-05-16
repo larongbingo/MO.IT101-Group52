@@ -39,6 +39,10 @@ public class ManageEmployeeListPage extends JPanel {
     }
 
     private String[][] transformToTable(List<Employee> employees) {
-        return employees.stream().map(employee -> new String[] { employee.getFullName() }).
+        return employees.stream().map(this::transformToRow).toArray(String[][]::new);
+    }
+
+    private String[] transformToRow(Employee employee) {
+        return new String[] { employee.getFullName() };
     }
 }
