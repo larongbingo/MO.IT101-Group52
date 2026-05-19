@@ -8,7 +8,8 @@ School project to MMDC
 ## Project Structure
 - `/motorph-payroll-core` - Business Logic and Domain Models
 - `/motorph-payroll-swing-ui` - Infrastructure, Swing UI and JVM Runtime
-- `/amper-swing-plugin` - Amper plugin for Swing Form UI
+- `/amper-swing-plugin` - Amper plugin for Swing Form UI, generates the UI code from form files
+- `/amper-swing-runtime` - Amper runtime for Swing Form UI, contains a helper class to initialize the UI
 
 ### Note on Amper
 Note that the developer used Amper to check and experiment with the build tool.
@@ -19,3 +20,7 @@ If you encounter any issues, please refer to the Amper documentation for trouble
 Additionally, Amper doesn't have support for Swing Form UI. To fix this, we generated an Amper 
 to generate the UI code. But Amper can't modify the binary files, so we had to manually modify the generated code to 
 work with referencing generated classes.
+
+### Note on Swing Form UI
+- The generated classes are postfixed with `FormHelper` example `LoginForm` -> `LoginFormFormHelper`
+- Call the `SwingForms.init(this)` to initialize the form
