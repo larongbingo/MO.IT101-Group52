@@ -7,7 +7,250 @@ import java.nio.file.Path
 import kotlin.io.path.*
 import javax.xml.parsers.DocumentBuilderFactory
 import org.w3c.dom.*
-import java.io.ByteArrayInputStream
+
+// --- Intermediate Representation (IR) ---
+
+data class ComponentModel(
+    val type: String,
+    val varName: String,
+    val binding: String?,
+    val properties: Map<String, String> = emptyMap(),
+    val layout: LayoutModel? = null,
+    val constraints: Any? = null,
+    val children: List<ComponentModel> = emptyList(),
+    val border: BorderModel? = null
+)
+
+data class LayoutModel(
+    val type: String,
+    val rowCount: Int = 1,
+    val colCount: Int = 1
+)
+
+data class BorderModel(
+    val type: String,
+    val title: String? = null
+)
+
+data class GridConstraints(
+    val row: Int,
+    val col: Int,
+    val rowSpan: Int,
+    val colSpan: Int,
+    val anchor: Int,
+    val fill: Int,
+    val hPolicy: Int,
+    val vPolicy: Int
+)
+
+// --- Parser Interface ---
+
+interface FormParser {
+    fun canParse(file: Path): Boolean
+    fun parse(file: Path): ComponentModel
+}
+
+class IntelliJFormParser : FormParser {
+    override fun canParse(file: Path): Boolean {
+        if (file.extension != "form") return false
+        val content = file.readText()
+        return content.contains("http://www.intellij.com/uidesigner/form/")
+    }
+
+    override fun parse(file: Path): ComponentModel {
+        val dbf = DocumentBuilderFactory.newInstance()
+        val db = dbf.newDocumentBuilder()
+        val doc = db.parse(file.toFile())
+        val rootElement = doc.documentElement
+        
+        // Find the first grid (root)
+        val rootGrid = doc.getElementsByTagName("grid").item(0) as Element
+        return parseElement(rootGrid)
+    }
+
+    private fun parseElement(element: Element): ComponentModel {
+        var type = element.getAttribute("class")
+        if (type.isEmpty()) {
+            type = when (element.tagName) {
+                "grid" -> "javax.swing.JPanel"
+                "vspacer" -> "com.intellij.uiDesigner.core.Spacer"
+                "hspacer" -> "com.intellij.uiDesigner.core.Spacer"
+                else -> "javax.swing.JPanel"
+            }
+        }
+        val binding = element.getAttribute("binding").ifEmpty { null }
+        val varName = binding ?: "comp${element.hashCode()}"
+        
+        val props = mutableMapOf<String, String>()
+        val propertiesList = element.getElementsByTagName("properties")
+        if (propertiesList.length > 0) {
+            val propsNode = propertiesList.item(0) as Element
+            val children = propsNode.childNodes
+            for (i in 0 until children.length) {
+                val node = children.item(i)
+                if (node is Element) {
+                    props[node.tagName] = node.getAttribute("value")
+                }
+            }
+        }
+
+        val layoutAttr = element.getAttribute("layout-manager")
+        val layout = if (layoutAttr.isNotEmpty()) LayoutModel(layoutAttr) else null
+
+        val constraintsNode = element.getElementsByTagName("constraints").item(0) as? Element
+        val gridNode = constraintsNode?.getElementsByTagName("grid")?.item(0) as? Element
+        val constraints = if (gridNode != null) {
+            GridConstraints(
+                gridNode.getAttribute("row").toInt(),
+                gridNode.getAttribute("column").toInt(),
+                gridNode.getAttribute("row-span").toIntOrNull() ?: 1,
+                gridNode.getAttribute("col-span").toIntOrNull() ?: 1,
+                gridNode.getAttribute("anchor").toIntOrNull() ?: 0,
+                gridNode.getAttribute("fill").toIntOrNull() ?: 0,
+                gridNode.getAttribute("vsize-policy").toIntOrNull() ?: 0,
+                gridNode.getAttribute("hsize-policy").toIntOrNull() ?: 0
+            )
+        } else null
+
+        val children = mutableListOf<ComponentModel>()
+        val childrenList = element.getElementsByTagName("children")
+        if (childrenList.length > 0) {
+            val childrenNode = childrenList.item(0) as Element
+            val childNodes = childrenNode.childNodes
+            for (i in 0 until childNodes.length) {
+                val node = childNodes.item(i)
+                if (node is Element && (node.tagName == "component" || node.tagName == "grid" || node.tagName == "vspacer" || node.tagName == "hspacer")) {
+                    children.add(parseElement(node))
+                }
+            }
+        }
+
+        return ComponentModel(type, varName, binding, props, layout, constraints, children)
+    }
+}
+
+class NetBeansFormParser : FormParser {
+    override fun canParse(file: Path): Boolean {
+        if (file.extension != "form") return false
+        val content = file.readText()
+        return content.contains("org.netbeans.modules.form")
+    }
+
+    override fun parse(file: Path): ComponentModel {
+        val dbf = DocumentBuilderFactory.newInstance()
+        val db = dbf.newDocumentBuilder()
+        val doc = db.parse(file.toFile())
+        
+        val topContainer = doc.getElementsByTagName("Container").item(0) as? Element
+            ?: doc.getElementsByTagName("Component").item(0) as Element
+            
+        return parseElement(topContainer)
+    }
+
+    private fun parseElement(element: Element): ComponentModel {
+        val type = element.getAttribute("class")
+        val binding = element.getAttribute("name").ifEmpty { null }
+        val varName = binding ?: "comp${element.hashCode()}"
+        
+        val props = mutableMapOf<String, String>()
+        // Simplified property extraction for NB
+        
+        val children = mutableListOf<ComponentModel>()
+        val subComponents = element.getElementsByTagName("SubComponents").item(0) as? Element
+        if (subComponents != null) {
+            val childNodes = subComponents.childNodes
+            for (i in 0 until childNodes.length) {
+                val node = childNodes.item(i)
+                if (node is Element && (node.tagName == "Component" || node.tagName == "Container")) {
+                    children.add(parseElement(node))
+                }
+            }
+        }
+        
+        return ComponentModel(type, varName, binding, props, null, null, children)
+    }
+}
+
+// --- Generator ---
+
+class KotlinSourceGenerator(val packageName: String, val className: String, val formFile: Path) {
+    fun generate(root: ComponentModel): String {
+        val setupCode = StringBuilder()
+        val bindings = mutableListOf<Pair<String, String>>()
+
+        fun walk(comp: ComponentModel, parentVar: String?) {
+            setupCode.append("        val ${comp.varName} = ${comp.type}()\n")
+            if (comp.binding != null) bindings.add(comp.binding to comp.type)
+
+            // Layout
+            comp.layout?.let {
+                if (it.type == "GridLayoutManager") {
+                    setupCode.append("        ${comp.varName}.layout = com.intellij.uiDesigner.core.GridLayoutManager(${it.rowCount}, ${it.colCount}, java.awt.Insets(0, 0, 0, 0), -1, -1)\n")
+                }
+            }
+
+            // Props (basic mapping)
+            comp.properties.forEach { (name, value) ->
+                when (name) {
+                    "text", "label", "toolTipText", "title" -> setupCode.append("        try { ${comp.varName}.$name = \"$value\" } catch(e: Exception) {}\n")
+                    "enabled", "visible", "opaque", "focusable", "editable" -> setupCode.append("        try { ${comp.varName}.$name = $value } catch(e: Exception) {}\n")
+                    "name" -> setupCode.append("        try { ${comp.varName}.name = \"$value\" } catch(e: Exception) {}\n")
+                    // ... other specialized props can go here
+                }
+            }
+
+            // Border
+            comp.border?.let { b ->
+                if (b.type == "none") setupCode.append("        ${comp.varName}.border = null\n")
+                else if (b.title != null) setupCode.append("        ${comp.varName}.border = javax.swing.BorderFactory.createTitledBorder(\"${b.title}\")\n")
+            }
+
+            // Parent add
+            parentVar?.let { p ->
+                val g = comp.constraints as? GridConstraints
+                if (g != null) {
+                    setupCode.append("        $p.add(${comp.varName}, com.intellij.uiDesigner.core.GridConstraints(${g.row}, ${g.col}, ${g.rowSpan}, ${g.colSpan}, ${g.anchor}, ${g.fill}, ${g.hPolicy}, ${g.vPolicy}, null, null, null, 0, false))\n")
+                } else {
+                    setupCode.append("        $p.add(${comp.varName})\n")
+                }
+            }
+
+            comp.children.forEach { walk(it, comp.varName) }
+        }
+
+        walk(root, null)
+
+        val packageLine = if (packageName.isNotEmpty()) "package $packageName" else ""
+        
+        val bindingCode = StringBuilder()
+        bindings.forEach { (field, type) ->
+            bindingCode.append("""
+        var f_$field: java.lang.reflect.Field? = null
+        var c_$field: Class<*>? = targetClass
+        while (c_$field != null && f_$field == null) {
+            try { f_$field = c_$field.getDeclaredField("$field") } catch (e: NoSuchFieldException) { c_$field = c_$field.superclass }
+        }
+        if (f_$field != null) f_$field.apply { isAccessible = true; set(target, $field) }
+            """.trimIndent() + "\n")
+        }
+
+        return """
+$packageLine
+
+import javax.swing.*
+import java.awt.*
+import com.intellij.uiDesigner.core.*
+
+object ${className}FormHelper {
+    fun initUI(target: Any) {
+        val targetClass = target.javaClass
+$setupCode
+$bindingCode
+    }
+}
+        """.trimIndent()
+    }
+}
 
 @TaskAction
 fun generateFormSources(
@@ -15,244 +258,32 @@ fun generateFormSources(
     @Output generatedSourceDir: Path
 ) {
     if (!formsDir.exists()) return
-
     generatedSourceDir.createDirectories()
 
-    formsDir.walk().filter { it.extension == "form" }.forEach { formFile ->
-        val relativePath = formsDir.relativize(formFile)
-        val packagePath = relativePath.parent?.toString()?.replace(java.io.File.separator, ".") ?: ""
-        val packageName = if (packagePath.isNotEmpty()) packagePath else ""
-        val className = formFile.nameWithoutExtension
+    val parsers = listOf(
+        IntelliJFormParser(),
+        NetBeansFormParser()
+    )
+
+    formsDir.walk().forEach { file ->
+        val parser = parsers.find { it.canParse(file) } ?: return@forEach
         
-        val outputFile = generatedSourceDir.resolve(relativePath).parent?.resolve("${className}FormHelper.kt") ?: generatedSourceDir.resolve("${className}FormHelper.kt")
-        outputFile.parent.createDirectories()
+        val relativePath = formsDir.relativize(file)
+        val packageName = relativePath.parent?.toString()?.replace(java.io.File.separator, ".") ?: ""
+        val className = file.nameWithoutExtension
         
-        val packageLine = if (packageName.isNotEmpty()) "package $packageName" else ""
-        
-        val formContent = formFile.readText()
-        val dbFactory = DocumentBuilderFactory.newInstance()
-        val dBuilder = dbFactory.newDocumentBuilder()
-        val doc = dBuilder.parse(ByteArrayInputStream(formContent.toByteArray()))
-        doc.documentElement.normalize()
-
-        val rootElement = doc.getElementsByTagName("grid").item(0) as Element
-        val componentCounter = mutableMapOf<String, Int>()
-
-        fun getUniqueName(type: String): String {
-            val base = type.substringAfterLast(".").lowercase()
-            val count = componentCounter.getOrDefault(base, 0) + 1
-            componentCounter[base] = count
-            return "$base$count"
+        try {
+            val root = parser.parse(file)
+            val generator = KotlinSourceGenerator(packageName, className, file)
+            val code = generator.generate(root)
+            
+            val outputFile = generatedSourceDir.resolve(relativePath).parent?.resolve("${className}FormHelper.kt") 
+                ?: generatedSourceDir.resolve("${className}FormHelper.kt")
+            outputFile.parent.createDirectories()
+            outputFile.writeText(code)
+            println("Successfully generated helper for ${file.fileName} using ${parser.javaClass.simpleName}")
+        } catch (e: Exception) {
+            println("Error parsing ${file.fileName} with ${parser.javaClass.simpleName}: ${e.message}")
         }
-
-        val setupCode = StringBuilder()
-        val bindings = mutableListOf<Pair<String, String>>()
-
-        fun Element.getChildByTagName(name: String): Element? {
-            val children = this.childNodes
-            for (i in 0 until children.length) {
-                val node = children.item(i)
-                if (node is Element && node.tagName == name) return node
-            }
-            return null
-        }
-
-        val tagToClass = mapOf(
-            "grid" to "javax.swing.JPanel",
-            "vspacer" to "com.intellij.uiDesigner.core.Spacer",
-            "hspacer" to "com.intellij.uiDesigner.core.Spacer",
-            "tabbedpane" to "javax.swing.JTabbedPane",
-            "scrollpane" to "javax.swing.JScrollPane",
-            "splitpane" to "javax.swing.JSplitPane",
-            "toolbar" to "javax.swing.JToolBar",
-            "toolbar-separator" to "javax.swing.JToolBar.Separator"
-        )
-
-        fun processComponent(element: Element, parentVar: String? = null): String {
-            val tagName = element.tagName
-            if (tagName == "constraints" || tagName == "properties" || tagName == "border" || tagName == "children") return ""
-            
-            var varName = ""
-            
-            val type = tagToClass[tagName] ?: element.getAttribute("class").ifEmpty { return "" }
-            
-            val binding = element.getAttribute("binding")
-            varName = if (binding.isNotEmpty()) binding else getUniqueName(type)
-            if (binding.isNotEmpty()) {
-                bindings.add(binding to type)
-            }
-
-            // Create component
-            setupCode.append("        val $varName = $type()\n")
-            
-            if (tagName == "grid" || tagName == "scrollpane" || tagName == "tabbedpane" || tagName == "splitpane") {
-                val layoutManager = element.getAttribute("layout-manager")
-                if (layoutManager == "GridLayoutManager") {
-                    val rowCount = element.getAttribute("row-count").ifEmpty { "1" }
-                    val colCount = element.getAttribute("column-count").ifEmpty { "1" }
-                    setupCode.append("        $varName.layout = com.intellij.uiDesigner.core.GridLayoutManager($rowCount, $colCount, java.awt.Insets(0, 0, 0, 0), -1, -1)\n")
-                }
-            }
-
-            // Set properties
-            val properties = element.getChildByTagName("properties")
-            properties?.let { props ->
-                val propNodes = props.childNodes
-                for (i in 0 until propNodes.length) {
-                    val prop = propNodes.item(i) as? Element ?: continue
-                    val propName = prop.tagName
-                    
-                    when (propName) {
-                        "text" -> {
-                            val value = prop.getAttribute("value")
-                            setupCode.append("        try { $varName.text = \"$value\" } catch(e: Exception) {}\n")
-                        }
-                        "label" -> {
-                            val value = prop.getAttribute("value")
-                            setupCode.append("        try { $varName.label = \"$value\" } catch(e: Exception) {}\n")
-                        }
-                        "title" -> {
-                            val value = prop.getAttribute("value")
-                            setupCode.append("        try {\n")
-                            setupCode.append("            val setter = $varName.javaClass.methods.find { it.name == \"setTitle\" && it.parameterTypes.size == 1 && it.parameterTypes[0] == String::class.java }\n")
-                            setupCode.append("            setter?.invoke($varName, \"$value\")\n")
-                            setupCode.append("        } catch(e: Exception) {}\n")
-                        }
-                        "enabled", "visible", "opaque", "focusable", "editable" -> {
-                            val value = prop.getAttribute("value")
-                            if (value.isNotEmpty()) {
-                                setupCode.append("        try { $varName.$propName = $value } catch(e: Exception) {}\n")
-                            }
-                        }
-                        "toolTipText" -> {
-                            val value = prop.getAttribute("value")
-                            setupCode.append("        $varName.toolTipText = \"$value\"\n")
-                        }
-                        "background", "foreground" -> {
-                            val color = prop.getAttribute("color")
-                            if (color.isNotEmpty()) {
-                                setupCode.append("        $varName.$propName = java.awt.Color($color, true)\n")
-                            }
-                        }
-                        "font" -> {
-                            val name = prop.getAttribute("name")
-                            val style = prop.getAttribute("style").ifEmpty { "-1" }
-                            val size = prop.getAttribute("size").ifEmpty { "-1" }
-                            setupCode.append("        val ${varName}_font = $varName.font\n")
-                            setupCode.append("        $varName.font = java.awt.Font(${if(name.isNotEmpty()) "\"$name\"" else "${varName}_font.name"}, ${if(style != "-1") style else "${varName}_font.style"}, ${if(size != "-1") size else "${varName}_font.size"})\n")
-                        }
-                        "minimumSize", "preferredSize", "maximumSize" -> {
-                            val width = prop.getAttribute("width")
-                            val height = prop.getAttribute("height")
-                            if (width.isNotEmpty() && height.isNotEmpty()) {
-                                setupCode.append("        $varName.$propName = java.awt.Dimension($width, $height)\n")
-                            }
-                        }
-                        else -> {
-                            val value = prop.getAttribute("value")
-                            if (value.isNotEmpty()) {
-                                setupCode.append("        try {\n")
-                                setupCode.append("            val setter = $varName.javaClass.methods.find { it.name == \"set${propName.capitalize()}\" }\n")
-                                setupCode.append("            if (setter != null) {\n")
-                                setupCode.append("                val paramType = setter.parameterTypes[0]\n")
-                                setupCode.append("                val arg: Any = when(paramType) {\n")
-                                setupCode.append("                    Boolean::class.javaPrimitiveType, Boolean::class.java -> \"$value\".toBoolean()\n")
-                                setupCode.append("                    Int::class.javaPrimitiveType, Int::class.java -> \"$value\".toInt()\n")
-                                setupCode.append("                    Double::class.javaPrimitiveType, Double::class.java -> \"$value\".toDouble()\n")
-                                setupCode.append("                    else -> \"$value\"\n")
-                                setupCode.append("                }\n")
-                                setupCode.append("                setter.invoke($varName, arg)\n")
-                                setupCode.append("            }\n")
-                                setupCode.append("        } catch(e: Exception) {}\n")
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Set border
-            val border = element.getChildByTagName("border")
-            border?.let { b ->
-                val borderType = b.getAttribute("type")
-                val title = b.getAttribute("title")
-                if (borderType == "none") {
-                    setupCode.append("        $varName.border = null\n")
-                } else if (title.isNotEmpty()) {
-                    setupCode.append("        $varName.border = javax.swing.BorderFactory.createTitledBorder(\"$title\")\n")
-                }
-            }
-
-            // Add to parent if exists
-            parentVar?.let { pVar ->
-                val constraintsElement = element.getChildByTagName("constraints")
-                val gridElement = constraintsElement?.getChildByTagName("grid")
-                if (gridElement != null) {
-                    val row = gridElement.getAttribute("row")
-                    val col = gridElement.getAttribute("column")
-                    val rowSpan = gridElement.getAttribute("row-span")
-                    val colSpan = gridElement.getAttribute("col-span")
-                    val anchor = gridElement.getAttribute("anchor")
-                    val fill = gridElement.getAttribute("fill")
-                    val vPolicy = gridElement.getAttribute("vsize-policy")
-                    val hPolicy = gridElement.getAttribute("hsize-policy")
-                    
-                    setupCode.append("        $pVar.add($varName, com.intellij.uiDesigner.core.GridConstraints($row, $col, $rowSpan, $colSpan, $anchor, $fill, $hPolicy, $vPolicy, null, null, null, 0, false))\n")
-                } else {
-                    setupCode.append("        $pVar.add($varName)\n")
-                }
-            }
-
-            // Process children
-            val childrenElement = element.getChildByTagName("children")
-            childrenElement?.let {
-                val childNodes = it.childNodes
-                for (i in 0 until childNodes.length) {
-                    val child = childNodes.item(i) as? Element ?: continue
-                    processComponent(child, varName)
-                }
-            }
-
-            return varName
-        }
-
-        val rootVar = processComponent(rootElement)
-
-        val initCode = StringBuilder()
-        initCode.append(setupCode)
-        bindings.forEach { (field, type) ->
-            initCode.append("\n")
-            initCode.append("        // Bind $field\n")
-            initCode.append("        var f_$field: java.lang.reflect.Field? = null\n")
-            initCode.append("        var c_$field: Class<*>? = targetClass\n")
-            initCode.append("        while (c_$field != null && f_$field == null) {\n")
-            initCode.append("            try { f_$field = c_$field.getDeclaredField(\"$field\") } catch (e: NoSuchFieldException) { c_$field = c_$field.superclass }\n")
-            initCode.append("        }\n")
-            initCode.append("        if (f_$field != null) f_$field.apply { isAccessible = true; set(target, $field) } else println(\"Warning: Field $field not found\")\n")
-        }
-
-        outputFile.writeText("""
-            $packageLine
-            
-            import javax.swing.*
-            import java.awt.*
-            import java.lang.reflect.Field
-            import com.intellij.uiDesigner.core.*
-            
-            /**
-             * Generated helper for $className.form
-             * AUTOMATED GENERATION - DO NOT EDIT
-             */
-            object ${className}FormHelper {
-                const val FORM_PATH = "${formFile.absolutePathString().replace("\\", "\\\\")}"
-                
-                fun initUI(target: Any) {
-                    val targetClass = target.javaClass
-                    ${initCode.toString()}
-                    println("UI initialized for $className")
-                }
-            }
-        """.trimIndent())
-        
-        println("Processed form: ${formFile.fileName}")
     }
 }

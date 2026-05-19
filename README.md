@@ -17,9 +17,8 @@ On first run, it may take a while to download the dependencies.
 
 If you encounter any issues, please refer to the Amper documentation for troubleshooting.
 
-Additionally, Amper doesn't have support for Swing Form UI. To fix this, we generated an Amper 
-to generate the UI code. But Amper can't modify the binary files, so we had to manually modify the generated code to 
-work with referencing generated classes.
+Additionally, Amper doesn't have support for Swing Form UI (.form files). To fix this, we generated an Amper Plugin
+to generate the UI form into Kotlin. 
 
 ### Note on Swing Form UI
 - The generated classes are postfixed with `FormHelper` example `LoginForm` -> `LoginFormFormHelper`

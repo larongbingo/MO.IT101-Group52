@@ -1,6 +1,8 @@
 product: jvm/amper-plugin
 
-dependencies:
-  - com.google.inject:guice:7.0.0
-  - com.intellij:forms_rt:7.0.3
+test-dependencies:
+  - bom: org.junit:junit-bom:5.10.1
+  - org.junit.jupiter:junit-jupiter
+
+dependencies: []
 

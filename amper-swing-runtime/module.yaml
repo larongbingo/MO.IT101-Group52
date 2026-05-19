@@ -1,1 +1,8 @@
 product: jvm/lib
+
+test-dependencies:
+  - bom: org.junit:junit-bom:5.10.1
+  - org.junit.jupiter:junit-jupiter
+
+dependencies:
+  - com.intellij:forms_rt:7.0.3

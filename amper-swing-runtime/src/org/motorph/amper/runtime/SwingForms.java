@@ -31,10 +31,11 @@ public class SwingForms {
             Method initMethod = helperClass.getMethod("initUI", Object.class);
             initMethod.invoke(instance, target);
         } catch (ClassNotFoundException e) {
-            System.err.println("Warning: No FormHelper found for " + className + " (expected " + helperName + ")");
+            // Silently skip if no helper found, or log warning
+            // System.out.println("No FormHelper found for " + className);
         } catch (Exception e) {
-            System.err.println("Error initializing UI for " + className + ": " + e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize UI for " + className + 
+                ". Ensure " + helperName + " is generated and all bound fields exist in the target class.", e);
         }
     }
 }
