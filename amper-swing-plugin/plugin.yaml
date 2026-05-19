@@ -1,0 +1,8 @@
+tasks:
+  generateFormSources:
+    action: !org.motorph.amper.form.generateFormSources
+      formsDir: ${module.rootDir}/src
+      generatedSourceDir: ${taskOutputDir}
+    markOutputsAs:
+      - path: ${action.generatedSourceDir}
+        kind: kotlin-sources
