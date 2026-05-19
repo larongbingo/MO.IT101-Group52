@@ -1,5 +1,6 @@
 package org.motorph.auth;
 
+import org.motorph.amper.runtime.SwingForms;
 import org.motorph.listeners.TextFieldHandler;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class LoginForm {
 
     public LoginForm(LoginViewModel viewModel) {
         this.viewModel = viewModel;
-        LoginFormFormHelper.INSTANCE.initUI(this);
+        SwingForms.init(this);
 
         // Bindings
         usernameTextField.getDocument().addDocumentListener(new TextFieldHandler(e ->{

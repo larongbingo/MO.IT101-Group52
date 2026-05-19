@@ -3,6 +3,7 @@ product:
 
 dependencies:
   - ../motorph-payroll-core
+  - ../amper-swing-runtime
   - de.siegmar:fastcsv:4.1.1
   - com.google.inject:guice:7.0.0
   - com.intellij:forms_rt:7.0.3

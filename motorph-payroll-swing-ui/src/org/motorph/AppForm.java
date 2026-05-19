@@ -1,5 +1,6 @@
 package org.motorph;
 
+import org.motorph.amper.runtime.SwingForms;
 import javax.swing.*;
 
 public class AppForm {
@@ -14,7 +15,7 @@ public class AppForm {
     public AppForm(AppViewModel viewModel) {
         this.viewModel = viewModel;
 
-        AppFormFormHelper.INSTANCE.initUI(this);
+        SwingForms.init(this);
 
         viewOtherEmployeeButton.addActionListener(e -> viewModel.GoToManageEmployees());
 
