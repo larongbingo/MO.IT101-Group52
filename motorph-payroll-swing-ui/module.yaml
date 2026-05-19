@@ -5,10 +5,15 @@ dependencies:
   - ../motorph-payroll-core
   - de.siegmar:fastcsv:4.1.1
   - com.google.inject:guice:7.0.0
+  - com.intellij:forms_rt:7.0.3
+
+plugins:
+  amper-swing-plugin:
+    enabled: true
 
 settings:
-  junit: junit-5
   jvm:
+    mainClass: org.motorph.Main
     jdk:
       version: 25
       selectionMode: alwaysProvision

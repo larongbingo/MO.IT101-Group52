@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.motorph.auth.ListLoginRepository;
-import org.motorph.auth.LoginPage;
 import org.motorph.auth.LoginViewModel;
 import org.motorph.auth.NoopStringHashing;
 import org.motorph.data.LoadData;
@@ -73,11 +72,6 @@ public class AppModule extends AbstractModule {
     public ManageEmployeeListViewModel provideManageEmployeeListViewModel(
             EmployeeRepository employeeRepository, ManageEmployeesService manageEmployeesService) {
         return new ManageEmployeeListViewModel(employeeRepository, manageEmployeesService);
-    }
-
-    @Provides
-    public LoginPage provideLoginPage(LoginViewModel viewModel) {
-        return new LoginPage(viewModel);
     }
 
     @Provides

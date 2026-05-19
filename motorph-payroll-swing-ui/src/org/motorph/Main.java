@@ -1,7 +1,8 @@
 package org.motorph;
 
 import com.google.inject.Guice;
-import org.motorph.auth.LoginPage;
+import org.motorph.auth.LoginForm;
+import org.motorph.auth.LoginViewModel;
 import org.motorph.data.LoadData;
 import org.motorph.employees.ManageEmployeeListPage;
 import org.motorph.employees.ViewEmployeeInfoPage;
@@ -19,7 +20,7 @@ public class Main {
 
         var map = new HashMap<String, JPanel>();
         map.put(Routes.APP, injector.getInstance(AppPage.class));
-        map.put(Routes.LOGIN, injector.getInstance(LoginPage.class));
+        map.put(Routes.LOGIN, new LoginForm(injector.getInstance(LoginViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_EMPLOYEE, injector.getInstance(ViewEmployeeInfoPage.class));
         map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
         map.put(Routes.VIEW_PAYROLL__CALCULATOR, injector.getInstance(CalculatePayrollPage.class));
