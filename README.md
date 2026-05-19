@@ -8,9 +8,14 @@ School project to MMDC
 ## Project Structure
 - `/motorph-payroll-core` - Business Logic and Domain Models
 - `/motorph-payroll-swing-ui` - Infrastructure, Swing UI and JVM Runtime
+- `/amper-swing-plugin` - Amper plugin for Swing Form UI
 
 ### Note on Amper
 Note that the developer used Amper to check and experiment with the build tool.
 On first run, it may take a while to download the dependencies.
 
 If you encounter any issues, please refer to the Amper documentation for troubleshooting.
+
+Additionally, Amper doesn't have support for Swing Form UI. To fix this, we generated an Amper 
+to generate the UI code. But Amper can't modify the binary files, so we had to manually modify the generated code to 
+work with referencing generated classes.
