@@ -75,11 +75,6 @@ public class AppModule extends AbstractModule {
     }
 
     @Provides
-    public AppPage provideAppPage(AppViewModel viewModel) {
-        return new AppPage(viewModel);
-    }
-
-    @Provides
     public ViewEmployeeInfoPage provideViewEmployeeInfoPage(ViewEmployeeViewModel viewModel) {
         return new ViewEmployeeInfoPage(viewModel);
     }

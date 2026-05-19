@@ -19,7 +19,7 @@ public class Main {
         injector.getInstance(LoadData.class).initReposWithData();
 
         var map = new HashMap<String, JPanel>();
-        map.put(Routes.APP, injector.getInstance(AppPage.class));
+        map.put(Routes.APP, new AppForm(injector.getInstance(AppViewModel.class)).getRootPanel());
         map.put(Routes.LOGIN, new LoginForm(injector.getInstance(LoginViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_EMPLOYEE, injector.getInstance(ViewEmployeeInfoPage.class));
         map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
