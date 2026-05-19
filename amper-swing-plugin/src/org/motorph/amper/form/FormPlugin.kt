@@ -24,7 +24,9 @@ data class ComponentModel(
 data class LayoutModel(
     val type: String,
     val rowCount: Int = 1,
-    val colCount: Int = 1
+    val colCount: Int = 1,
+    val hgap: Int = -1,
+    val vgap: Int = -1
 )
 
 data class BorderModel(
@@ -75,6 +77,10 @@ class IntelliJFormParser : FormParser {
                 "grid" -> "javax.swing.JPanel"
                 "vspacer" -> "com.intellij.uiDesigner.core.Spacer"
                 "hspacer" -> "com.intellij.uiDesigner.core.Spacer"
+                "scrollpane" -> "javax.swing.JScrollPane"
+                "tabbedpane" -> "javax.swing.JTabbedPane"
+                "splitpane" -> "javax.swing.JSplitPane"
+                "toolbar" -> "javax.swing.JToolBar"
                 else -> "javax.swing.JPanel"
             }
         }
@@ -89,13 +95,38 @@ class IntelliJFormParser : FormParser {
             for (i in 0 until children.length) {
                 val node = children.item(i)
                 if (node is Element) {
-                    props[node.tagName] = node.getAttribute("value")
+                    val valueAttr = node.getAttribute("value")
+                    if (valueAttr.isNotEmpty()) {
+                        props[node.tagName] = valueAttr
+                    } else {
+                        // Check for color or font nodes
+                        val colorNode = node.getElementsByTagName("color").item(0) as? Element
+                        if (colorNode != null) {
+                            val rgb = colorNode.getAttribute("rgb").toIntOrNull(16)
+                            if (rgb != null) props[node.tagName] = rgb.toString()
+                        }
+                        val fontNode = node.getElementsByTagName("font").item(0) as? Element
+                        if (fontNode != null) {
+                            val name = fontNode.getAttribute("name")
+                            val size = fontNode.getAttribute("size")
+                            val style = fontNode.getAttribute("style")
+                            props[node.tagName] = "$name-$style-$size"
+                        }
+                    }
                 }
             }
         }
 
         val layoutAttr = element.getAttribute("layout-manager")
-        val layout = if (layoutAttr.isNotEmpty()) LayoutModel(layoutAttr) else null
+        val layout = if (layoutAttr.isNotEmpty()) {
+            LayoutModel(
+                layoutAttr,
+                element.getAttribute("row-count").toIntOrNull() ?: 1,
+                element.getAttribute("column-count").toIntOrNull() ?: 1,
+                element.getAttribute("hgap").toIntOrNull() ?: -1,
+                element.getAttribute("vgap").toIntOrNull() ?: -1
+            )
+        } else null
 
         val constraintsNode = element.getElementsByTagName("constraints").item(0) as? Element
         val gridNode = constraintsNode?.getElementsByTagName("grid")?.item(0) as? Element
@@ -153,7 +184,56 @@ class NetBeansFormParser : FormParser {
         val varName = binding ?: "comp${element.hashCode()}"
         
         val props = mutableMapOf<String, String>()
-        // Simplified property extraction for NB
+        val properties = element.getElementsByTagName("Properties").item(0) as? Element
+        if (properties != null) {
+            val childNodes = properties.childNodes
+            for (i in 0 until childNodes.length) {
+                val node = childNodes.item(i)
+                if (node is Element && node.tagName == "Property") {
+                    val propName = node.getAttribute("name")
+                    val valueAttr = node.getAttribute("value")
+                    if (valueAttr.isNotEmpty()) {
+                        props[propName] = valueAttr
+                    } else {
+                        // Handle complex properties like Color, Font
+                        val colorNode = node.getElementsByTagName("Color").item(0) as? Element
+                        if (colorNode != null) {
+                            val blue = colorNode.getAttribute("blue").toIntOrNull() ?: 0
+                            val green = colorNode.getAttribute("green").toIntOrNull() ?: 0
+                            val red = colorNode.getAttribute("red").toIntOrNull() ?: 0
+                            val rgb = (red shl 16) or (green shl 8) or blue
+                            props[propName] = rgb.toString()
+                        }
+                        val fontNode = node.getElementsByTagName("Font").item(0) as? Element
+                        if (fontNode != null) {
+                            val name = fontNode.getAttribute("name")
+                            val size = fontNode.getAttribute("size")
+                            val style = fontNode.getAttribute("style")
+                            props[propName] = "$name-$style-$size"
+                        }
+                    }
+                }
+            }
+        }
+
+        val layoutNode = element.getElementsByTagName("Layout").item(0) as? Element
+        val layout = if (layoutNode != null) {
+            val layoutType = layoutNode.getAttribute("class").substringAfterLast('.')
+            LayoutModel(
+                layoutType,
+                hgap = -1, // NB often embeds gaps in GroupLayout or uses FlowLayout defaults
+                vgap = -1
+            )
+        } else null
+
+        // Border
+        val borderNode = element.getElementsByTagName("Border").item(0) as? Element
+        val border = if (borderNode != null) {
+            val borderInfo = borderNode.getElementsByTagName("TitledBorder").item(0) as? Element
+            if (borderInfo != null) {
+                BorderModel("TitledBorder", title = borderInfo.getAttribute("title"))
+            } else BorderModel("unknown")
+        } else null
         
         val children = mutableListOf<ComponentModel>()
         val subComponents = element.getElementsByTagName("SubComponents").item(0) as? Element
@@ -167,7 +247,7 @@ class NetBeansFormParser : FormParser {
             }
         }
         
-        return ComponentModel(type, varName, binding, props, null, null, children)
+        return ComponentModel(type, varName, binding, props, layout, null, children, border)
     }
 }
 
@@ -184,25 +264,62 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
 
             // Layout
             comp.layout?.let {
-                if (it.type == "GridLayoutManager") {
-                    setupCode.append("        ${comp.varName}.layout = com.intellij.uiDesigner.core.GridLayoutManager(${it.rowCount}, ${it.colCount}, java.awt.Insets(0, 0, 0, 0), -1, -1)\n")
+                when (it.type) {
+                    "GridLayoutManager" -> {
+                        setupCode.append("        ${comp.varName}.layout = com.intellij.uiDesigner.core.GridLayoutManager(${it.rowCount}, ${it.colCount}, java.awt.Insets(0, 0, 0, 0), ${it.hgap}, ${it.vgap})\n")
+                    }
+                    "BorderLayout" -> {
+                        setupCode.append("        ${comp.varName}.layout = java.awt.BorderLayout(${it.hgap.coerceAtLeast(0)}, ${it.vgap.coerceAtLeast(0)})\n")
+                    }
+                    "FlowLayout" -> {
+                        setupCode.append("        ${comp.varName}.layout = java.awt.FlowLayout(java.awt.FlowLayout.CENTER, ${it.hgap.coerceAtLeast(0)}, ${it.vgap.coerceAtLeast(0)})\n")
+                    }
+                    "GridBagLayout" -> {
+                        setupCode.append("        ${comp.varName}.layout = java.awt.GridBagLayout()\n")
+                    }
+                    "BoxLayout" -> {
+                        setupCode.append("        ${comp.varName}.layout = javax.swing.BoxLayout(${comp.varName}, javax.swing.BoxLayout.Y_AXIS)\n")
+                    }
+                    "CardLayout" -> {
+                        setupCode.append("        ${comp.varName}.layout = java.awt.CardLayout()\n")
+                    }
                 }
             }
 
             // Props (basic mapping)
             comp.properties.forEach { (name, value) ->
                 when (name) {
-                    "text", "label", "toolTipText", "title" -> setupCode.append("        try { ${comp.varName}.$name = \"$value\" } catch(e: Exception) {}\n")
+                    "text", "label", "toolTipText", "title" -> setupCode.append("        try { ${comp.varName}.text = \"$value\" } catch(e: Exception) { try { ${comp.varName}.title = \"$value\" } catch(e2: Exception) {} }\n")
                     "enabled", "visible", "opaque", "focusable", "editable" -> setupCode.append("        try { ${comp.varName}.$name = $value } catch(e: Exception) {}\n")
                     "name" -> setupCode.append("        try { ${comp.varName}.name = \"$value\" } catch(e: Exception) {}\n")
-                    // ... other specialized props can go here
+                    "background", "backgroundColor" -> setupCode.append("        try { ${comp.varName}.background = java.awt.Color($value) } catch(e: Exception) {}\n")
+                    "foreground", "foregroundColor" -> setupCode.append("        try { ${comp.varName}.foreground = java.awt.Color($value) } catch(e: Exception) {}\n")
+                    "font" -> {
+                        // value usually "Name,Style,Size" in some form, or we just try to parse it if it's a font name
+                        setupCode.append("        try { ${comp.varName}.font = java.awt.Font.decode(\"$value\") } catch(e: Exception) {}\n")
+                    }
+                    "horizontalAlignment" -> {
+                        val align = when(value.lowercase()) {
+                            "left" -> "javax.swing.SwingConstants.LEFT"
+                            "right" -> "javax.swing.SwingConstants.RIGHT"
+                            "center" -> "javax.swing.SwingConstants.CENTER"
+                            "leading" -> "javax.swing.SwingConstants.LEADING"
+                            "trailing" -> "javax.swing.SwingConstants.TRAILING"
+                            else -> value
+                        }
+                        setupCode.append("        try { ${comp.varName}.horizontalAlignment = $align } catch(e: Exception) {}\n")
+                    }
                 }
             }
 
             // Border
             comp.border?.let { b ->
                 if (b.type == "none") setupCode.append("        ${comp.varName}.border = null\n")
-                else if (b.title != null) setupCode.append("        ${comp.varName}.border = javax.swing.BorderFactory.createTitledBorder(\"${b.title}\")\n")
+                else if (b.title != null) {
+                    val titleJustification = "javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION"
+                    val titlePosition = "javax.swing.border.TitledBorder.DEFAULT_POSITION"
+                    setupCode.append("        ${comp.varName}.border = javax.swing.BorderFactory.createTitledBorder(null, \"${b.title}\", $titleJustification, $titlePosition, null, null)\n")
+                }
             }
 
             // Parent add
@@ -211,7 +328,21 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
                 if (g != null) {
                     setupCode.append("        $p.add(${comp.varName}, com.intellij.uiDesigner.core.GridConstraints(${g.row}, ${g.col}, ${g.rowSpan}, ${g.colSpan}, ${g.anchor}, ${g.fill}, ${g.hPolicy}, ${g.vPolicy}, null, null, null, 0, false))\n")
                 } else {
-                    setupCode.append("        $p.add(${comp.varName})\n")
+                    // Try to guess constraints if parent has BorderLayout
+                    setupCode.append("""
+        if ($p.layout is java.awt.BorderLayout) {
+            val constraints = when("${comp.varName}") {
+                "north", "top" -> java.awt.BorderLayout.NORTH
+                "south", "bottom" -> java.awt.BorderLayout.SOUTH
+                "east", "right" -> java.awt.BorderLayout.EAST
+                "west", "left" -> java.awt.BorderLayout.WEST
+                else -> java.awt.BorderLayout.CENTER
+            }
+            $p.add(${comp.varName}, constraints)
+        } else {
+            $p.add(${comp.varName})
+        }
+                    """.trimIndent() + "\n")
                 }
             }
 
