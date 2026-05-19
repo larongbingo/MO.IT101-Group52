@@ -18,7 +18,8 @@ data class ComponentModel(
     val layout: LayoutModel? = null,
     val constraints: Any? = null,
     val children: List<ComponentModel> = emptyList(),
-    val border: BorderModel? = null
+    val border: BorderModel? = null,
+    val customCreate: Boolean = false
 )
 
 data class LayoutModel(
@@ -222,7 +223,9 @@ class IntelliJFormParser : FormParser {
             BorderModel(borderNode.getAttribute("type"), title)
         } else null
 
-        return ComponentModel(type, varName, binding, props, layout, constraints, children, border)
+        val customCreate = element.getAttribute("custom-create") == "true"
+
+        return ComponentModel(type, varName, binding, props, layout, constraints, children, border, customCreate)
     }
 }
 
@@ -323,9 +326,46 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
     fun generate(root: ComponentModel): String {
         val setupCode = StringBuilder()
         val bindings = mutableListOf<Pair<String, String>>()
+        var hasCustomCreate = false
+
+        fun collectCustomCreate(comp: ComponentModel) {
+            if (comp.customCreate) hasCustomCreate = true
+            comp.children.forEach { collectCustomCreate(it) }
+        }
+        collectCustomCreate(root)
+
+        if (hasCustomCreate) {
+            setupCode.append("""
+        try {
+            val m = targetClass.getDeclaredMethod("createUIComponents")
+            m.isAccessible = true
+            m.invoke(target)
+        } catch (e: Exception) {
+        }
+        
+            """.trimIndent() + "\n")
+        }
 
         fun walk(comp: ComponentModel, parentVar: String?) {
-            setupCode.append("        val ${comp.varName} = ${comp.type}()\n")
+            if (comp.customCreate) {
+                val typeWithGenerics = if (comp.type.endsWith("ComboBox")) "${comp.type}<Any>" else comp.type
+                setupCode.append("""
+        var f_custom_${comp.varName}: java.lang.reflect.Field? = null
+        var c_custom_${comp.varName}: Class<*>? = targetClass
+        while (c_custom_${comp.varName} != null && f_custom_${comp.varName} == null) {
+            try { f_custom_${comp.varName} = c_custom_${comp.varName}.getDeclaredField("${comp.binding ?: comp.varName}") } catch (e: NoSuchFieldException) { c_custom_${comp.varName} = c_custom_${comp.varName}.superclass }
+        }
+        val ${comp.varName} = if (f_custom_${comp.varName} != null) {
+            f_custom_${comp.varName}.isAccessible = true
+            f_custom_${comp.varName}.get(target) as? $typeWithGenerics ?: $typeWithGenerics()
+        } else {
+            $typeWithGenerics()
+        }
+                """.trimIndent() + "\n")
+            } else {
+                val typeWithGenerics = if (comp.type.endsWith("ComboBox")) "${comp.type}<Any>" else comp.type
+                setupCode.append("        val ${comp.varName} = $typeWithGenerics()\n")
+            }
             if (comp.binding != null) bindings.add(comp.binding to comp.type)
 
             // Layout
