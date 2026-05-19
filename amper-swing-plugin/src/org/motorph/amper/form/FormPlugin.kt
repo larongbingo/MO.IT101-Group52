@@ -26,7 +26,17 @@ data class LayoutModel(
     val rowCount: Int = 1,
     val colCount: Int = 1,
     val hgap: Int = -1,
-    val vgap: Int = -1
+    val vgap: Int = -1,
+    val margin: InsetsModel = InsetsModel(),
+    val sameSizeHorizontally: Boolean = false,
+    val sameSizeVertically: Boolean = false
+)
+
+data class InsetsModel(
+    val top: Int = 0,
+    val left: Int = 0,
+    val bottom: Int = 0,
+    val right: Int = 0
 )
 
 data class BorderModel(
@@ -42,7 +52,15 @@ data class GridConstraints(
     val anchor: Int,
     val fill: Int,
     val hPolicy: Int,
-    val vPolicy: Int
+    val vPolicy: Int,
+    val preferredSize: DimensionModel? = null,
+    val minimumSize: DimensionModel? = null,
+    val maximumSize: DimensionModel? = null
+)
+
+data class DimensionModel(
+    val width: Int,
+    val height: Int
 )
 
 // --- Parser Interface ---
@@ -53,6 +71,25 @@ interface FormParser {
 }
 
 class IntelliJFormParser : FormParser {
+    private fun Element.getChild(tagName: String): Element? {
+        val nodes = this.childNodes
+        for (i in 0 until nodes.length) {
+            val node = nodes.item(i)
+            if (node is Element && node.tagName == tagName) return node
+        }
+        return null
+    }
+
+    private fun Element.getChildren(tagName: String): List<Element> {
+        val result = mutableListOf<Element>()
+        val nodes = this.childNodes
+        for (i in 0 until nodes.length) {
+            val node = nodes.item(i)
+            if (node is Element && node.tagName == tagName) result.add(node)
+        }
+        return result
+    }
+
     override fun canParse(file: Path): Boolean {
         if (file.extension != "form") return false
         val content = file.readText()
@@ -88,9 +125,8 @@ class IntelliJFormParser : FormParser {
         val varName = binding ?: "comp${element.hashCode()}"
         
         val props = mutableMapOf<String, String>()
-        val propertiesList = element.getElementsByTagName("properties")
-        if (propertiesList.length > 0) {
-            val propsNode = propertiesList.item(0) as Element
+        val propsNode = element.getChild("properties")
+        if (propsNode != null) {
             val children = propsNode.childNodes
             for (i in 0 until children.length) {
                 val node = children.item(i)
@@ -100,12 +136,12 @@ class IntelliJFormParser : FormParser {
                         props[node.tagName] = valueAttr
                     } else {
                         // Check for color or font nodes
-                        val colorNode = node.getElementsByTagName("color").item(0) as? Element
+                        val colorNode = node.getChild("color")
                         if (colorNode != null) {
                             val rgb = colorNode.getAttribute("rgb").toIntOrNull(16)
                             if (rgb != null) props[node.tagName] = rgb.toString()
                         }
-                        val fontNode = node.getElementsByTagName("font").item(0) as? Element
+                        val fontNode = node.getChild("font")
                         if (fontNode != null) {
                             val name = fontNode.getAttribute("name")
                             val size = fontNode.getAttribute("size")
@@ -118,19 +154,41 @@ class IntelliJFormParser : FormParser {
         }
 
         val layoutAttr = element.getAttribute("layout-manager")
+        val marginNode = element.getChild("margin")
+        val margin = if (marginNode != null) {
+            InsetsModel(
+                marginNode.getAttribute("top").toIntOrNull() ?: 0,
+                marginNode.getAttribute("left").toIntOrNull() ?: 0,
+                marginNode.getAttribute("bottom").toIntOrNull() ?: 0,
+                marginNode.getAttribute("right").toIntOrNull() ?: 0
+            )
+        } else InsetsModel()
+
         val layout = if (layoutAttr.isNotEmpty()) {
+            val hgap = element.getAttribute("hgap").let { if (it.isNullOrEmpty() || it == "-1") 0 else it.toIntOrNull() ?: 0 }
+            val vgap = element.getAttribute("vgap").let { if (it.isNullOrEmpty() || it == "-1") 0 else it.toIntOrNull() ?: 0 }
             LayoutModel(
                 layoutAttr,
                 element.getAttribute("row-count").toIntOrNull() ?: 1,
                 element.getAttribute("column-count").toIntOrNull() ?: 1,
-                element.getAttribute("hgap").toIntOrNull() ?: -1,
-                element.getAttribute("vgap").toIntOrNull() ?: -1
+                hgap,
+                vgap,
+                margin,
+                element.getAttribute("same-size-horizontally") == "true",
+                element.getAttribute("same-size-vertically") == "true"
             )
         } else null
 
-        val constraintsNode = element.getElementsByTagName("constraints").item(0) as? Element
-        val gridNode = constraintsNode?.getElementsByTagName("grid")?.item(0) as? Element
+        val constraintsNode = element.getChild("constraints")
+        val gridNode = constraintsNode?.getChild("grid")
         val constraints = if (gridNode != null) {
+            val prefNode = gridNode.getChild("preferred-size")
+            val preferredSize = if (prefNode != null) DimensionModel(prefNode.getAttribute("width").toInt(), prefNode.getAttribute("height").toInt()) else null
+            val minNode = gridNode.getChild("minimum-size")
+            val minimumSize = if (minNode != null) DimensionModel(minNode.getAttribute("width").toInt(), minNode.getAttribute("height").toInt()) else null
+            val maxNode = gridNode.getChild("maximum-size")
+            val maximumSize = if (maxNode != null) DimensionModel(maxNode.getAttribute("width").toInt(), maxNode.getAttribute("height").toInt()) else null
+
             GridConstraints(
                 gridNode.getAttribute("row").toInt(),
                 gridNode.getAttribute("column").toInt(),
@@ -138,25 +196,33 @@ class IntelliJFormParser : FormParser {
                 gridNode.getAttribute("col-span").toIntOrNull() ?: 1,
                 gridNode.getAttribute("anchor").toIntOrNull() ?: 0,
                 gridNode.getAttribute("fill").toIntOrNull() ?: 0,
+                gridNode.getAttribute("hsize-policy").toIntOrNull() ?: 0,
                 gridNode.getAttribute("vsize-policy").toIntOrNull() ?: 0,
-                gridNode.getAttribute("hsize-policy").toIntOrNull() ?: 0
+                preferredSize,
+                minimumSize,
+                maximumSize
             )
         } else null
 
         val children = mutableListOf<ComponentModel>()
-        val childrenList = element.getElementsByTagName("children")
-        if (childrenList.length > 0) {
-            val childrenNode = childrenList.item(0) as Element
+        val childrenNode = element.getChild("children")
+        if (childrenNode != null) {
             val childNodes = childrenNode.childNodes
             for (i in 0 until childNodes.length) {
                 val node = childNodes.item(i)
-                if (node is Element && (node.tagName == "component" || node.tagName == "grid" || node.tagName == "vspacer" || node.tagName == "hspacer")) {
+                if (node is Element && (node.tagName == "component" || node.tagName == "grid" || node.tagName == "vspacer" || node.tagName == "hspacer" || node.tagName == "scrollpane" || node.tagName == "tabbedpane" || node.tagName == "splitpane" || node.tagName == "toolbar")) {
                     children.add(parseElement(node))
                 }
             }
         }
 
-        return ComponentModel(type, varName, binding, props, layout, constraints, children)
+        val borderNode = element.getChild("border")
+        val border = if (borderNode != null) {
+            val title = borderNode.getAttribute("title").ifEmpty { null }
+            BorderModel(borderNode.getAttribute("type"), title)
+        } else null
+
+        return ComponentModel(type, varName, binding, props, layout, constraints, children, border)
     }
 }
 
@@ -266,7 +332,7 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
             comp.layout?.let {
                 when (it.type) {
                     "GridLayoutManager" -> {
-                        setupCode.append("        ${comp.varName}.layout = com.intellij.uiDesigner.core.GridLayoutManager(${it.rowCount}, ${it.colCount}, java.awt.Insets(0, 0, 0, 0), ${it.hgap}, ${it.vgap})\n")
+                        setupCode.append("        ${comp.varName}.layout = com.intellij.uiDesigner.core.GridLayoutManager(${it.rowCount}, ${it.colCount}, java.awt.Insets(${it.margin.top}, ${it.margin.left}, ${it.margin.bottom}, ${it.margin.right}), ${it.hgap}, ${it.vgap}, ${it.sameSizeHorizontally}, ${it.sameSizeVertically})\n")
                     }
                     "BorderLayout" -> {
                         setupCode.append("        ${comp.varName}.layout = java.awt.BorderLayout(${it.hgap.coerceAtLeast(0)}, ${it.vgap.coerceAtLeast(0)})\n")
@@ -289,7 +355,9 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
             // Props (basic mapping)
             comp.properties.forEach { (name, value) ->
                 when (name) {
-                    "text", "label", "toolTipText", "title" -> setupCode.append("        try { ${comp.varName}.text = \"$value\" } catch(e: Exception) { try { ${comp.varName}.title = \"$value\" } catch(e2: Exception) {} }\n")
+                    "text", "label" -> setupCode.append("        try { ${comp.varName}.text = \"$value\" } catch(e: Exception) {}\n")
+                    "title" -> setupCode.append("        try { ${comp.varName}.title = \"$value\" } catch(e: Exception) {}\n")
+                    "toolTipText" -> setupCode.append("        try { ${comp.varName}.toolTipText = \"$value\" } catch(e: Exception) {}\n")
                     "enabled", "visible", "opaque", "focusable", "editable" -> setupCode.append("        try { ${comp.varName}.$name = $value } catch(e: Exception) {}\n")
                     "name" -> setupCode.append("        try { ${comp.varName}.name = \"$value\" } catch(e: Exception) {}\n")
                     "background", "backgroundColor" -> setupCode.append("        try { ${comp.varName}.background = java.awt.Color($value) } catch(e: Exception) {}\n")
@@ -326,7 +394,10 @@ class KotlinSourceGenerator(val packageName: String, val className: String, val 
             parentVar?.let { p ->
                 val g = comp.constraints as? GridConstraints
                 if (g != null) {
-                    setupCode.append("        $p.add(${comp.varName}, com.intellij.uiDesigner.core.GridConstraints(${g.row}, ${g.col}, ${g.rowSpan}, ${g.colSpan}, ${g.anchor}, ${g.fill}, ${g.hPolicy}, ${g.vPolicy}, null, null, null, 0, false))\n")
+                    val pref = g.preferredSize?.let { "java.awt.Dimension(${it.width}, ${it.height})" } ?: "null"
+                    val min = g.minimumSize?.let { "java.awt.Dimension(${it.width}, ${it.height})" } ?: "null"
+                    val max = g.maximumSize?.let { "java.awt.Dimension(${it.width}, ${it.height})" } ?: "null"
+                    setupCode.append("        $p.add(${comp.varName}, com.intellij.uiDesigner.core.GridConstraints(${g.row}, ${g.col}, ${g.rowSpan}, ${g.colSpan}, ${g.anchor}, ${g.fill}, ${g.hPolicy}, ${g.vPolicy}, $pref, $min, $max, 0, false))\n")
                 } else {
                     // Try to guess constraints if parent has BorderLayout
                     setupCode.append("""
