@@ -67,6 +67,26 @@ public class Employee {
         this.DeletedAt = deletedAt;
     }
 
+    /// Copy Constructor
+    public Employee(Employee other) {
+        this.EmployeeId = other.EmployeeId;
+        this.LastName = other.LastName;
+        this.FirstName = other.FirstName;
+        this.Birthday = other.Birthday;
+        this.Address = other.Address;
+        this.PhoneNumber = other.PhoneNumber;
+        this.SSSNumber = other.SSSNumber;
+        this.PhilHealthNumber = other.PhilHealthNumber;
+        this.TaxIdNumber = other.TaxIdNumber;
+        this.PagibigMemberIdNumber = other.PagibigMemberIdNumber;
+        this.EmploymentStatus = other.EmploymentStatus;
+        this.Position = other.Position;
+        this.BasicSalary = other.BasicSalary;
+        this.SupervisorId = other.SupervisorId;
+        this.CreatedAt = other.CreatedAt;
+        this.DeletedAt = other.DeletedAt;
+    }
+
     public final String EmployeeId;
     public String LastName;
     public String FirstName;

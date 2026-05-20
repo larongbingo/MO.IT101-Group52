@@ -5,7 +5,8 @@ import org.motorph.auth.LoginForm;
 import org.motorph.auth.LoginViewModel;
 import org.motorph.data.LoadData;
 import org.motorph.employees.ManageEmployeeListPage;
-import org.motorph.employees.ViewEmployeeInfoPage;
+import org.motorph.employees.ViewEmployeeInfoForm;
+import org.motorph.employees.ViewEmployeeViewModel;
 import org.motorph.payroll.CalculatePayrollPage;
 import org.motorph.payroll.SelectTimesheetPage;
 
@@ -21,7 +22,7 @@ public class Main {
         var map = new HashMap<String, JPanel>();
         map.put(Routes.APP, new AppForm(injector.getInstance(AppViewModel.class)).getRootPanel());
         map.put(Routes.LOGIN, new LoginForm(injector.getInstance(LoginViewModel.class)).getRootPanel());
-        map.put(Routes.VIEW_EMPLOYEE, injector.getInstance(ViewEmployeeInfoPage.class));
+        map.put(Routes.VIEW_EMPLOYEE, new ViewEmployeeInfoForm(injector.getInstance(ViewEmployeeViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
         map.put(Routes.VIEW_PAYROLL__CALCULATOR, injector.getInstance(CalculatePayrollPage.class));
         map.put(Routes.MANAGE_EMPLOYEES, injector.getInstance(ManageEmployeeListPage.class));
