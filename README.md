@@ -4,6 +4,9 @@ School project to MMDC
 ## Run
 - Swing Desktop App from MOIT103
   - `./amper run --module motorph-payroll-swing-ui --main-class org.motorph.Main`
+  - Credentials (Username/Password):
+    - staff1/staff1 - CEO
+    - staff11/staff11 - Payroll Team Lead
 
 ## Project Structure
 - `/motorph-payroll-core` - Business Logic and Domain Models
