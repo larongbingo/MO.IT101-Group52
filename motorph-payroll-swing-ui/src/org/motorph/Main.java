@@ -8,7 +8,8 @@ import org.motorph.employees.ManageEmployeeListPage;
 import org.motorph.employees.ViewEmployeeInfoForm;
 import org.motorph.employees.ViewEmployeeViewModel;
 import org.motorph.payroll.CalculatePayrollPage;
-import org.motorph.payroll.SelectTimesheetPage;
+import org.motorph.payroll.SelectTimesheetForm;
+import org.motorph.payroll.SelectTimesheetViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class Main {
         map.put(Routes.APP, new AppForm(injector.getInstance(AppViewModel.class)).getRootPanel());
         map.put(Routes.LOGIN, new LoginForm(injector.getInstance(LoginViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_EMPLOYEE, new ViewEmployeeInfoForm(injector.getInstance(ViewEmployeeViewModel.class)).getRootPanel());
-        map.put(Routes.VIEW_PAYROLL, injector.getInstance(SelectTimesheetPage.class));
+        map.put(Routes.VIEW_PAYROLL, new SelectTimesheetForm(injector.getInstance(SelectTimesheetViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_PAYROLL__CALCULATOR, injector.getInstance(CalculatePayrollPage.class));
         map.put(Routes.MANAGE_EMPLOYEES, injector.getInstance(ManageEmployeeListPage.class));
 
