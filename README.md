@@ -13,7 +13,7 @@ Specifically a Project to `MOIT103 - S1101 - Group 23`
 - `/motorph-payroll-core` - Business Logic and Domain Models
 - `/motorph-payroll-swing-ui` - Infrastructure, Swing UI and JVM Runtime
 - `/amper-swing-plugin` - Amper plugin for Swing Form UI, generates the UI code from form files
-- `/amper-swing-runtime` - Amper runtime for Swing Form UI, contains a helper class to initialize the UI
+- `/amper-swing-runtime` - Contains a helper class to initialize the UI
 
 ### Note on Amper
 Note that the developer used Amper to check and experiment with the build tool.
