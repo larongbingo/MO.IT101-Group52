@@ -62,12 +62,9 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
                 if (borderMatch != null) {
                     props["title"] = borderMatch.groupValues[1]
                 }
-                
-                if (props.isNotEmpty()) println("DEBUG: Extracted props for ID $id: $props")
             }
-            println("DEBUG: Found XML properties for ${formFile.fileName}: IDs ${xmlProperties.keys}")
         } catch(e: Exception) {
-            println("DEBUG: XML parse error for ${formFile.fileName}: ${e.message}")
+            // println("DEBUG: XML parse error for ${formFile.fileName}: ${e.message}")
         }
         // ------------------------------------------
 
@@ -76,7 +73,7 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
             val binding = comp.binding
             val varName = (binding ?: "comp${comp.hashCode().coerceAtLeast(0)}")
             
-            val typeWithGenerics = if (type.endsWith("ComboBox")) "$type<Any>" else type
+            val typeWithGenerics = if (type == null || type.isEmpty()) "javax.swing.JPanel" else if (type.endsWith("ComboBox")) "$type<Any>" else type
             
             if (comp.isCustomCreate) {
                 setupCode.append("""
@@ -92,11 +89,85 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
             $typeWithGenerics()
         }
                 """.trimIndent() + "\n")
+            } else if (comp.javaClass.simpleName == "LwNestedForm") {
+                // Nested form handling: try to find the bound field's type
+                val formFile = try {
+                    val getFormFileMethod = comp.javaClass.getMethod("getFormFileName")
+                    getFormFileMethod.invoke(comp) as? String
+                } catch(e: Exception) { null }
+
+                setupCode.append("""
+        var f_nested_$varName: java.lang.reflect.Field? = null
+        var c_nested_$varName: Class<*>? = targetClass
+        while (c_nested_$varName != null && f_nested_$varName == null) {
+            try { f_nested_$varName = c_nested_$varName.getDeclaredField("${binding ?: varName}") } catch (e: NoSuchFieldException) { c_nested_$varName = c_nested_$varName.superclass }
+        }
+        val $varName = if (f_nested_$varName != null) {
+            val nestedType = f_nested_$varName.type
+            f_nested_$varName.isAccessible = true
+            val existing = f_nested_$varName.get(target)
+            if (existing != null && nestedType.isInstance(existing)) {
+                existing
+            } else {
+                val instantiated = try { 
+                    nestedType.getDeclaredConstructor().newInstance() 
+                } catch(e: Exception) { 
+                    try {
+                        val classNameFromForm = "${formFile ?: ""}".replace("/", ".").replace("\\", ".").removeSuffix(".form")
+                        if (classNameFromForm.isNotEmpty()) {
+                            val clazz = Class.forName(classNameFromForm)
+                            clazz.getDeclaredConstructor().newInstance()
+                        } else {
+                            null
+                        }
+                    } catch(e2: Exception) {
+                        null
+                    }
+                }
+                if (instantiated != null && nestedType.isInstance(instantiated)) {
+                    instantiated
+                } else {
+                    existing ?: javax.swing.JPanel()
+                }
+            }
+        } else {
+            try {
+                val classNameFromForm = "${formFile ?: ""}".replace("/", ".").replace("\\", ".").removeSuffix(".form")
+                if (classNameFromForm.isNotEmpty()) {
+                    Class.forName(classNameFromForm).getDeclaredConstructor().newInstance()
+                } else {
+                    javax.swing.JPanel()
+                }
+            } catch(e: Exception) {
+                javax.swing.JPanel()
+            }
+        }
+                """.trimIndent() + "\n")
+                // Cast to JComponent for constraints if needed
+                setupCode.append("""
+        val ${varName}Comp = try {
+            val getRootPanel = $varName.javaClass.getMethod("getRootPanel")
+            getRootPanel.invoke($varName) as? javax.swing.JComponent
+        } catch(e: Exception) {
+            try {
+                val getRoot = $varName.javaClass.getMethod("getRoot")
+                getRoot.invoke($varName) as? javax.swing.JComponent
+            } catch(e2: Exception) {
+                $varName as? javax.swing.JComponent
+            }
+        } ?: ($varName as? java.awt.Component)?.let { c -> javax.swing.JPanel().apply { add(c) } } ?: javax.swing.JPanel()
+                """.trimIndent() + "\n")
+                
+                setupCode.append("""
+        if (f_nested_$varName != null && f_nested_$varName.type.isInstance($varName)) {
+            f_nested_$varName.set(target, $varName)
+        }
+                """.trimIndent() + "\n")
             } else {
                 setupCode.append("        val $varName = $typeWithGenerics()\n")
             }
             
-            if (binding != null) bindings.add(binding to type)
+            if (binding != null && comp.javaClass.simpleName != "LwNestedForm") bindings.add(binding to type)
             // Properties extraction using reflection on the LwComponent model
             fun extractString(obj: Any?): String? {
                 if (obj == null) return null
@@ -115,13 +186,14 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
                 props?.forEach { (name, value) ->
                     val escaped = value.replace("\"", "\\\"")
                     if (name == "text" || name == "label") {
-                        val setTextCode = "        try { ( $varName as? javax.swing.JLabel )?.text = \"$escaped\"; ( $varName as? javax.swing.AbstractButton )?.text = \"$escaped\" } catch(e: Exception) {}\n"
+                        val setTextCode = "        try { ( $varName as? javax.swing.JLabel )?.let { it.text = \"$escaped\" } } catch(e: Exception) {}\n" +
+                                          "        try { ( $varName as? javax.swing.AbstractButton )?.let { it.text = \"$escaped\" } } catch(e: Exception) {}\n"
                         if (!setupCode.toString().contains(setTextCode)) {
                             setupCode.append(setTextCode)
                         }
                     }
                     if (name == "title") {
-                        val setTitleCode = "        try { ( $varName as? javax.swing.JComponent )?.border = javax.swing.BorderFactory.createTitledBorder(\"$escaped\") } catch(e: Exception) {}\n"
+                        val setTitleCode = "        try { ( $varName as? javax.swing.JComponent )?.let { it.border = javax.swing.BorderFactory.createTitledBorder(\"$escaped\") } } catch(e: Exception) {}\n"
                         if (!setupCode.toString().contains(setTitleCode)) {
                             setupCode.append(setTitleCode)
                         }
@@ -204,6 +276,8 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
             } catch(e: Exception) {}
             // -------------------------------------
 
+            val finalVarName = if (comp.javaClass.simpleName == "LwNestedForm") "${varName}Comp" else varName
+            
             // Parent add
             parentVar?.let { p ->
                 val constraints = comp.constraints
@@ -211,9 +285,9 @@ class KotlinSourceGenerator(val packageName: String, val className: String) {
                     val pref = "java.awt.Dimension(${constraints.myPreferredSize.width}, ${constraints.myPreferredSize.height})"
                     val min = "java.awt.Dimension(${constraints.myMinimumSize.width}, ${constraints.myMinimumSize.height})"
                     val max = "java.awt.Dimension(${constraints.myMaximumSize.width}, ${constraints.myMaximumSize.height})"
-                    setupCode.append("        $p.add($varName, com.intellij.uiDesigner.core.GridConstraints(${constraints.row}, ${constraints.column}, ${constraints.rowSpan}, ${constraints.colSpan}, ${constraints.anchor}, ${constraints.fill}, ${constraints.hSizePolicy}, ${constraints.vSizePolicy}, $pref, $min, $max, ${constraints.indent}, ${constraints.isUseParentLayout}))\n")
+                    setupCode.append("        $p.add($finalVarName, com.intellij.uiDesigner.core.GridConstraints(${constraints.row}, ${constraints.column}, ${constraints.rowSpan}, ${constraints.colSpan}, ${constraints.anchor}, ${constraints.fill}, ${constraints.hSizePolicy}, ${constraints.vSizePolicy}, $pref, $min, $max, ${constraints.indent}, ${constraints.isUseParentLayout}))\n")
                 } else {
-                    setupCode.append("        $p.add($varName)\n")
+                    setupCode.append("        $p.add($finalVarName)\n")
                 }
             }
 
@@ -298,7 +372,6 @@ fun generateFormSources(
         try {
             val fis = FileInputStream(file.toFile())
             val root = Utils.getRootContainer(fis, null)
-            println("Successfully generated helper for ${file.fileName} using IntelliJ form compiler. XML props: ${root.componentCount}")
             val generator = KotlinSourceGenerator(packageName, className)
             val code = generator.generate(root, file)
             
