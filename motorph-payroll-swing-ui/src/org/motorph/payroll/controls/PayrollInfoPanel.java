@@ -1,28 +1,41 @@
 package org.motorph.payroll.controls;
 
+import org.motorph.amper.runtime.SwingForms;
 import org.motorph.payroll.Payroll;
 
 import javax.swing.*;
-import java.time.format.DateTimeFormatter;
 
-public class PayrollInfoPanel extends JPanel {
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+public class PayrollInfoPanel {
+    private JPanel rootPanel;
+    private JLabel dateRangeLabel;
+    private JLabel totalHoursWorkedLabel;
+    private JLabel hourlyRateLabel;
+    private JLabel grossPayLabel;
+    private JLabel sssContributionLabel;
+    private JLabel philHealthContributionLabel;
+    private JLabel pagibigContributionLabel;
+    private JLabel taxablePayLabel;
+    private JLabel taxLabel;
+    private JLabel netPayLabel;
 
-    public PayrollInfoPanel(Payroll payroll) {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    public PayrollInfoPanel() {
+        SwingForms.init(this);
+    }
 
-        var firstDate = payroll.dateRange().start().format(formatter);
-        var lastDate = payroll.dateRange().end().format(formatter);
+    public JPanel getRootPanel() {
+        return rootPanel;
+    }
 
-        add(new JLabel("[MotorPH] === " + firstDate + " - " + lastDate));
-        add(new JLabel("[MotorPH] Total Hours Worked: " + payroll.totalHours()));
-        add(new JLabel("[MotorPH] Gross Pay: Php " + payroll.grossPay()));
-        add(new JLabel("[MotorPH] SSS Contribution: Php " + payroll.sssContribution()));
-        add(new JLabel("[MotorPH] PhilHealth Contribution: Php " + payroll.philHealthContribution()));
-        add(new JLabel("[MotorPH] Pag-Ibig Contribution: Php " + payroll.pagIbigContribution()));
-        add(new JLabel("[MotorPH] Total Deductions: Php " + payroll.totalDeductions()));
-        add(new JLabel("[MotorPH] Taxable Income: Php " + payroll.taxableIncome()));
-        add(new JLabel("[MotorPH] Tax: Php " + payroll.tax()));
-        add(new JLabel("[MotorPH] Net Pay: Php " + payroll.netPay()));
+    public void setPayroll(Payroll payroll) {
+        dateRangeLabel.setText(payroll.dateRange().start() + " - " + payroll.dateRange().end());
+        totalHoursWorkedLabel.setText(payroll.totalHours() + " hours");
+        // TODO: add hourly rate into the Payroll class
+        grossPayLabel.setText(String.valueOf(payroll.grossPay()));
+        sssContributionLabel.setText(String.valueOf(payroll.sssContribution()));
+        philHealthContributionLabel.setText(String.valueOf(payroll.philHealthContribution()));
+        pagibigContributionLabel.setText(String.valueOf(payroll.pagIbigContribution()));
+        taxablePayLabel.setText(String.valueOf(payroll.taxableIncome()));
+        taxLabel.setText(String.valueOf(payroll.tax()));
+        netPayLabel.setText(String.valueOf(payroll.netPay()));
     }
 }

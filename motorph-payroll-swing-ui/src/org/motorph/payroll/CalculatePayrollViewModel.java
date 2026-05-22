@@ -5,6 +5,9 @@ import org.motorph.Shell;
 import org.motorph.auth.CurrentEmployeeLoggedIn;
 import org.motorph.timesheet.TimesheetRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CalculatePayrollViewModel {
     private final PayrollService payrollService;
     private final TimesheetRepository timesheetRepository;
@@ -14,14 +17,17 @@ public class CalculatePayrollViewModel {
         this.timesheetRepository = timesheetRepository;
     }
 
-    public Payroll calculatePayroll() {
+    public List<Payroll> calculatePayroll() {
         var employee = CurrentEmployeeLoggedIn.employee;
-        // TODO: handle multiple timesheets/months, for testing purposes this only handles the first month
-        var timesheet = timesheetRepository.getAllTimesheetsByEmployeeIdAndMonth(
-                employee.EmployeeId,
-                SelectedTimesheet.selectedTimesheetMonth.getFirst()
-        );
-        return payrollService.calculatePayroll(employee, timesheet);
+        var timesheets = SelectedTimesheet.selectedTimesheetMonth;
+        var payrolls = new ArrayList<Payroll>();
+
+        timesheets.stream()
+            .map(timesheetMonth -> timesheetRepository.getAllTimesheetsByEmployeeIdAndMonth(employee.EmployeeId, timesheetMonth))
+            .map(timesheetsForMonth -> payrollService.calculatePayroll(employee, timesheetsForMonth))
+            .forEach(payroll -> payrolls.add(payroll));
+
+        return payrolls;
     }
 
     public void goBack() {

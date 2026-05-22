@@ -75,11 +75,6 @@ public class AppModule extends AbstractModule {
     }
 
     @Provides
-    public CalculatePayrollPage provideCalculatePayrollPage(CalculatePayrollViewModel viewModel) {
-        return new CalculatePayrollPage(viewModel);
-    }
-
-    @Provides
     public ManageEmployeeListPage provideManageEmployeeListPage(ManageEmployeeListViewModel viewModel) {
         return new ManageEmployeeListPage(viewModel);
     }
