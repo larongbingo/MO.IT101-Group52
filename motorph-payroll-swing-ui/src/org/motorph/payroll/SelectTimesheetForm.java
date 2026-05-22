@@ -33,9 +33,11 @@ public class SelectTimesheetForm {
         selectAllCheckBox.addItemListener(e -> {
             timesheetComboBox.setEnabled(e.getStateChange() != ItemEvent.SELECTED);
             confirmButton.setEnabled(anySelected());
+            viewModel.isAllSelected = e.getStateChange() == ItemEvent.SELECTED;
         });
         timesheetComboBox.addItemListener(e -> {
             confirmButton.setEnabled(anySelected());
+            viewModel.selectedTimesheetMonth = (String) timesheetComboBox.getSelectedItem();
         });
         confirmButton.addActionListener(e -> viewModel.Submit());
         cancelButton.addActionListener(e -> viewModel.GoBack());
