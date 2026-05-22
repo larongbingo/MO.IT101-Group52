@@ -27,3 +27,4 @@ to generate the UI form into Kotlin.
 ### Note on Swing Form UI
 - The generated classes are postfixed with `FormHelper` example `LoginForm` -> `LoginFormFormHelper`
 - Call the `SwingForms.init(this)` to initialize the form
+- The .form files are only supported by IntelliJ IDEA's Form Designer. Please use IntelliJ IDEA to edit the form files.
