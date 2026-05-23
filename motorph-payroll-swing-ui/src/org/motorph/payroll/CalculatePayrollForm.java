@@ -18,8 +18,11 @@ public class CalculatePayrollForm {
         SwingForms.init(this);
         this.viewModel = viewModel;
         this.innerPanel = new JPanel();
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
         scrollPane.setViewportView(innerPanel);
         rootPanel.addAncestorListener(new AncestorListenerHandler(this::onShow));
+        backToHomeButton.addActionListener(e -> viewModel.goHome());
+        backToSelectionButton.addActionListener(e -> viewModel.goBack());
     }
 
     public JPanel getRootPanel() {

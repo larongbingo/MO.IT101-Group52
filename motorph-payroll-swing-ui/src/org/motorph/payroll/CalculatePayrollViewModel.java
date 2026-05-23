@@ -31,6 +31,10 @@ public class CalculatePayrollViewModel {
     }
 
     public void goBack() {
+        Shell.navigate(Routes.VIEW_PAYROLL);
+    }
+
+    public void goHome() {
         Shell.navigate(Routes.APP);
     }
 }
