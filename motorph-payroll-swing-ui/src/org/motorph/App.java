@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.motorph.auth.LoginForm;
 import org.motorph.auth.LoginViewModel;
-import org.motorph.data.LoadData;
 import org.motorph.employees.ManageEmployeeListForm;
 import org.motorph.employees.ManageEmployeeListViewModel;
 import org.motorph.employees.ViewEmployeeInfoForm;
@@ -23,6 +22,7 @@ public class App {
     private HashMap<String, JPanel> routing;
     private Shell shell;
     private final Injector injector;
+    public Runnable preRunAction = () -> {};
 
     public App() {
         this(new JFrame(), Guice.createInjector(new AppModule()));
@@ -47,7 +47,7 @@ public class App {
     }
 
     public void runApp() {
-        injector.getInstance(LoadData.class).initReposWithData();
+        preRunAction.run();
         frame.setMinimumSize(new Dimension(500, 300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(shell);

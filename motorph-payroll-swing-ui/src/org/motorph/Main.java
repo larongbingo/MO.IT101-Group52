@@ -13,6 +13,11 @@ import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
-        new App();
+        var frame = new JFrame();
+        var injector = Guice.createInjector(new AppModule());
+
+        var app = new App(frame, injector);
+        app.preRunAction = () -> injector.getInstance(LoadData.class).initReposWithData();
+        app.runApp();
     }
 }
