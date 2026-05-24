@@ -1,6 +1,7 @@
 package org.motorph.auth;
 
 import org.motorph.amper.runtime.SwingForms;
+import org.motorph.listeners.AncestorListenerHandler;
 import org.motorph.listeners.TextFieldHandler;
 
 import javax.swing.*;
@@ -24,6 +25,10 @@ public class LoginForm {
             viewModel.password = e;
         }));
         loginButton.addActionListener(e -> viewModel.onLogin());
+        rootPanel.addAncestorListener(new AncestorListenerHandler(() -> {
+            usernameTextField.setText("");
+            passwordTextField.setText("");
+        }));
     }
 
     public JPanel getRootPanel() {
