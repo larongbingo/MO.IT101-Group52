@@ -19,4 +19,8 @@ public class AppViewModel {
     public void GoToManageEmployees() {
         Shell.navigate(Routes.MANAGE_EMPLOYEES);
     }
+    public void Logout() {
+        CurrentEmployeeLoggedIn.employee = null;
+        Shell.navigate(Routes.LOGIN);
+    }
 }

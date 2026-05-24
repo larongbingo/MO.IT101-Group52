@@ -25,6 +25,8 @@ public class AppForm {
 
         viewPayrollButton.addActionListener(e -> viewModel.GoToPayroll());
 
+        logoutButton.addActionListener(e -> viewModel.Logout());
+
         rootPanel.addAncestorListener(new AncestorListenerHandler(this::onShow));
     }
 
