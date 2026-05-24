@@ -73,9 +73,4 @@ public class AppModule extends AbstractModule {
             EmployeeRepository employeeRepository, ManageEmployeesService manageEmployeesService) {
         return new ManageEmployeeListViewModel(employeeRepository, manageEmployeesService);
     }
-
-    @Provides
-    public ManageEmployeeListPage provideManageEmployeeListPage(ManageEmployeeListViewModel viewModel) {
-        return new ManageEmployeeListPage(viewModel);
-    }
 }

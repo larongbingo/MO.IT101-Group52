@@ -4,9 +4,7 @@ import com.google.inject.Guice;
 import org.motorph.auth.LoginForm;
 import org.motorph.auth.LoginViewModel;
 import org.motorph.data.LoadData;
-import org.motorph.employees.ManageEmployeeListPage;
-import org.motorph.employees.ViewEmployeeInfoForm;
-import org.motorph.employees.ViewEmployeeViewModel;
+import org.motorph.employees.*;
 import org.motorph.payroll.*;
 
 import javax.swing.*;
@@ -24,7 +22,7 @@ public class Main {
         map.put(Routes.VIEW_EMPLOYEE, new ViewEmployeeInfoForm(injector.getInstance(ViewEmployeeViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_PAYROLL, new SelectTimesheetForm(injector.getInstance(SelectTimesheetViewModel.class)).getRootPanel());
         map.put(Routes.VIEW_PAYROLL__CALCULATOR, new CalculatePayrollForm(injector.getInstance(CalculatePayrollViewModel.class)).getRootPanel());
-        map.put(Routes.MANAGE_EMPLOYEES, injector.getInstance(ManageEmployeeListPage.class));
+        map.put(Routes.MANAGE_EMPLOYEES, new ManageEmployeeListForm(injector.getInstance(ManageEmployeeListViewModel.class)).getRootPanel());
 
         var shellPanel = new Shell(map);
         Shell.Global = shellPanel;
