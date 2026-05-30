@@ -1,6 +1,5 @@
 package org.motorph.payroll;
 
-import org.motorph.amper.runtime.SwingForms;
 import org.motorph.listeners.AncestorListenerHandler;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ public class SelectTimesheetForm {
 
     public SelectTimesheetForm(SelectTimesheetViewModel viewModel) {
         this.viewModel = viewModel;
-        SwingForms.init(this);
         addBindings();
     }
 

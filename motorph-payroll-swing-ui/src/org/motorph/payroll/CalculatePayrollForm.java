@@ -1,6 +1,5 @@
 package org.motorph.payroll;
 
-import org.motorph.amper.runtime.SwingForms;
 import org.motorph.listeners.AncestorListenerHandler;
 import org.motorph.payroll.controls.PayrollInfoPanel;
 
@@ -15,7 +14,6 @@ public class CalculatePayrollForm {
     private CalculatePayrollViewModel viewModel;
 
     public CalculatePayrollForm(CalculatePayrollViewModel viewModel) {
-        SwingForms.init(this);
         this.viewModel = viewModel;
         this.innerPanel = new JPanel();
         innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));

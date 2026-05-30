@@ -1,8 +1,0 @@
-modules:
-  - motorph-payroll-core
-  - motorph-payroll-swing-ui
-  - amper-swing-plugin
-  - amper-swing-runtime
-
-plugins:
-  - ./amper-swing-plugin

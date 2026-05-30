@@ -1,6 +1,5 @@
 package org.motorph.employees;
 
-import org.motorph.amper.runtime.SwingForms;
 import org.motorph.employees.controls.EmployeeInfoPanel;
 import org.motorph.listeners.AncestorListenerHandler;
 
@@ -12,7 +11,6 @@ public class ViewEmployeeInfoForm {
     private JButton homeButton;
 
     public ViewEmployeeInfoForm(ViewEmployeeViewModel viewModel) {
-        SwingForms.init(this);
         employeeInfoPanel.setIsEnabled(false);
         homeButton.addActionListener(e -> viewModel.GoBack());
 

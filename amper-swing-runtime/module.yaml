@@ -1,4 +1,0 @@
-product: jvm/lib
-
-dependencies:
-  - com.intellij:forms_rt:7.0.3: exported

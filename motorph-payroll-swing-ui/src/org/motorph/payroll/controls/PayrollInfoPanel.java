@@ -1,6 +1,5 @@
 package org.motorph.payroll.controls;
 
-import org.motorph.amper.runtime.SwingForms;
 import org.motorph.payroll.Payroll;
 
 import javax.swing.*;
@@ -19,7 +18,6 @@ public class PayrollInfoPanel {
     private JLabel netPayLabel;
 
     public PayrollInfoPanel() {
-        SwingForms.init(this);
     }
 
     public JPanel getRootPanel() {

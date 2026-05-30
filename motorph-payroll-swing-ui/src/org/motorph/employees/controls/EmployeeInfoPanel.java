@@ -1,6 +1,5 @@
 package org.motorph.employees.controls;
 
-import org.motorph.amper.runtime.SwingForms;
 import org.motorph.employees.Employee;
 import org.motorph.listeners.TextFieldHandler;
 
@@ -32,7 +31,6 @@ public class EmployeeInfoPanel {
     private Consumer<Employee> employeeConsumer;
 
     public EmployeeInfoPanel() {
-        SwingForms.init(this);
         setIsEnabled(false);
         this.employeeConsumer =  (e) -> {};
         addBindings();
